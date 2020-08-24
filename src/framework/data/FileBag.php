@@ -1,8 +1,12 @@
 <?php
 
+
 namespace framework\data;
 
-interface Bag
+
+use framework\File;
+
+interface FileBag
 {
     /**
      * @return int
@@ -17,24 +21,18 @@ interface Bag
 
     /**
      * @param string $key
-     * @return string
+     * @return File
      */
-    public function get(string $key): string;
+    public function get(string $key): File;
 
     /**
-     * @param string $key
-     * @param string $value
+     * @param File $file
+     * @return mixed
      */
-    public function set(string $key, string $value);
+    public function set(File $file);
 
     /**
      * @return array
      */
     public function all(): array;
-
-    /**
-     * @param array $array
-     * @return mixed
-     */
-    public function replace(array $array);
 }

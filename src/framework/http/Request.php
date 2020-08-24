@@ -5,6 +5,12 @@ namespace framework\http;
 
 
 use framework\data\Bag;
+use framework\data\CookieBag;
+use framework\data\Cookies;
+use framework\data\FileBag;
+use framework\data\Files;
+use framework\data\Headers;
+use framework\data\Query;
 
 class Request
 {
@@ -72,22 +78,22 @@ class Request
     }
 
     /**
-     * @var Bag $cookies
+     * @var CookieBag $cookies
      */
-    private Bag $cookies;
+    private CookieBag $cookies;
 
     /**
-     * @return Bag
+     * @return CookieBag
      */
-    public function getCookies(): Bag
+    public function getCookies(): CookieBag
     {
         return $this->cookies;
     }
 
     /**
-     * @param Bag $cookies
+     * @param CookieBag $cookies
      */
-    public function setCookies(Bag $cookies): void
+    public function setCookies(CookieBag $cookies): void
     {
         $this->cookies = $cookies;
     }
@@ -132,6 +138,27 @@ class Request
     public function setRequest(Bag $request): void
     {
         $this->request = $request;
+    }
+
+    /**
+     * @var FileBag
+     */
+    private FileBag $files;
+
+    /**
+     * @return FileBag
+     */
+    public function getFiles(): FileBag
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param FileBag $files
+     */
+    public function setFiles(FileBag $files): void
+    {
+        $this->files = $files;
     }
 
     /**
@@ -197,6 +224,9 @@ class Request
         $this->port = $port;
     }
 
+    /**
+     * @return Request
+     */
     public static function createFromGlobals(): Request
     {
         $request = new Request();
@@ -207,5 +237,10 @@ class Request
 
         $request->setAddr($_SERVER['REMOTE_ADDR']);
         $request->setPort($_SERVER['REMOTE_PORT']);
+
+        $request->setQuery(Query::createFromGlobals());
+        $request->setCookies(Cookies::createFromGlobals());
+        $request->setHeaders(Headers::createFromGlobals());
+        $request->setFiles(Files::createFromGlobals());
     }
 }

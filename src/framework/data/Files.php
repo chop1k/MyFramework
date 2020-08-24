@@ -4,15 +4,18 @@
 namespace framework\data;
 
 
-class Files implements Bag
+use framework\File;
+
+class Files implements FileBag
 {
+    private array $array;
 
     /**
      * @inheritDoc
      */
     public function count(): int
     {
-        // TODO: Implement count() method.
+        return count($this->array);
     }
 
     /**
@@ -20,23 +23,23 @@ class Files implements Bag
      */
     public function has(string $key): bool
     {
-        // TODO: Implement has() method.
+        return isset($this->array[$key]);
     }
 
     /**
      * @inheritDoc
      */
-    public function get(string $key): string
+    public function get(string $key): File
     {
-        // TODO: Implement get() method.
+        return $this->array[$key];
     }
 
     /**
      * @inheritDoc
      */
-    public function set(string $key, string $value)
+    public function set(File $file)
     {
-        // TODO: Implement set() method.
+        $this->array[$file->getName()] = $file;
     }
 
     /**
@@ -44,11 +47,28 @@ class Files implements Bag
      */
     public function all(): array
     {
-        // TODO: Implement all() method.
+        return $this->array;
     }
 
-    public function replace(array $array)
+    /**
+     * @return Files
+     */
+    public static function createFromGlobals(): Files
     {
-        // TODO: Implement replace() method.
+        $files = new Files();
+
+        foreach ($_FILES as $key => $value)
+        {
+            $file = new File();
+
+            $file->setName($value['name']);
+            $file->setType($value['type']);
+            $file->setPath($value['tmp_name']);
+            $file->setSize($value['size']);
+
+            $files->set($file);
+        }
+
+        return $files;
     }
 }

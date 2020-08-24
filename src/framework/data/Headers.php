@@ -6,13 +6,19 @@ namespace framework\data;
 
 class Headers implements Bag
 {
+    public function __construct()
+    {
+        $this->array = [];
+    }
+
+    private array $array;
 
     /**
      * @inheritDoc
      */
     public function count(): int
     {
-        // TODO: Implement count() method.
+        return count($this->array);
     }
 
     /**
@@ -20,7 +26,7 @@ class Headers implements Bag
      */
     public function has(string $key): bool
     {
-        // TODO: Implement has() method.
+        return isset($this->array[strtoupper($key)]);
     }
 
     /**
@@ -28,7 +34,7 @@ class Headers implements Bag
      */
     public function get(string $key): string
     {
-        // TODO: Implement get() method.
+        return $this->array[strtoupper($key)];
     }
 
     /**
@@ -36,7 +42,7 @@ class Headers implements Bag
      */
     public function set(string $key, string $value)
     {
-        // TODO: Implement set() method.
+        $this->array[strtoupper($key)] = $value;
     }
 
     /**
@@ -44,11 +50,37 @@ class Headers implements Bag
      */
     public function all(): array
     {
-        // TODO: Implement all() method.
+        return $this->array;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function replace(array $array)
     {
-        // TODO: Implement replace() method.
+        foreach ($array as $key => $value)
+        {
+            $this->array[strtoupper($key)] = $value;
+        }
+    }
+
+    /**
+     * @return Headers
+     */
+    public static function createFromGlobals(): Headers
+    {
+        $headers = new Headers();
+
+        foreach ($_SERVER as $key => $value)
+        {
+            if (substr($key, 0 , 5) !== 'HTTP_')
+                continue;
+
+            $key = substr($key, 0, strlen($key));
+
+            $headers->set($key, $value);
+        }
+
+        return $headers;
     }
 }

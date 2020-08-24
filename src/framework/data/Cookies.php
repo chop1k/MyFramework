@@ -4,7 +4,7 @@
 namespace framework\data;
 
 
-class Cookies implements Bag
+class Cookies implements CookieBag
 {
     /**
      * @var array $cookies
@@ -16,7 +16,7 @@ class Cookies implements Bag
      */
     public function count(): int
     {
-        // TODO: Implement count() method.
+        return count($this->cookies);
     }
 
     /**
@@ -24,23 +24,23 @@ class Cookies implements Bag
      */
     public function has(string $key): bool
     {
-        // TODO: Implement has() method.
+        return isset($this->cookies[$key]);
     }
 
     /**
      * @inheritDoc
      */
-    public function get(string $key): string
+    public function get(string $key): Cookie
     {
-        // TODO: Implement get() method.
+        return $this->cookies[$key];
     }
 
     /**
      * @inheritDoc
      */
-    public function set(string $key, string $value)
+    public function set(Cookie $cookie)
     {
-        // TODO: Implement set() method.
+        $this->cookies[$cookie->getName()] = $cookie;
     }
 
     /**
@@ -48,11 +48,34 @@ class Cookies implements Bag
      */
     public function all(): array
     {
-        // TODO: Implement all() method.
+        return $this->cookies;
     }
 
-    public function replace(array $array)
+    public function allNew(): array
     {
-        // TODO: Implement replace() method.
+        $array = [];
+
+        /**
+         * @var Cookie $value
+         */
+        foreach ($this->cookies as $value)
+        {
+            if ($value->isNew())
+                $array[] = $value;
+        }
+
+        return $array;
+    }
+
+    public static function createFromGlobals(): Cookies
+    {
+        $cookies = new Cookies();
+
+        foreach ($_COOKIE as $key => $value)
+        {
+
+        }
+
+        return $cookies;
     }
 }

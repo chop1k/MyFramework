@@ -1,8 +1,11 @@
 <?php
 
+
 namespace framework\data;
 
-interface Bag
+
+
+interface CookieBag
 {
     /**
      * @return int
@@ -17,24 +20,20 @@ interface Bag
 
     /**
      * @param string $key
-     * @return string
+     * @return Cookie
      */
-    public function get(string $key): string;
+    public function get(string $key): Cookie;
 
     /**
-     * @param string $key
-     * @param string $value
+     * @param Cookie $file
+     * @return mixed
      */
-    public function set(string $key, string $value);
+    public function set(Cookie $file);
 
     /**
      * @return array
      */
     public function all(): array;
 
-    /**
-     * @param array $array
-     * @return mixed
-     */
-    public function replace(array $array);
+    public function allNew(): array;
 }

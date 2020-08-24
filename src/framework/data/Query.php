@@ -6,13 +6,19 @@ namespace framework\data;
 
 class Query implements Bag
 {
+    public function __construct()
+    {
+        $this->array = [];
+    }
+
+    private array $array;
 
     /**
      * @inheritDoc
      */
     public function count(): int
     {
-        // TODO: Implement count() method.
+        return count($this->array);
     }
 
     /**
@@ -20,7 +26,7 @@ class Query implements Bag
      */
     public function has(string $key): bool
     {
-        // TODO: Implement has() method.
+        return isset($this->array[$key]);
     }
 
     /**
@@ -28,7 +34,7 @@ class Query implements Bag
      */
     public function get(string $key): string
     {
-        // TODO: Implement get() method.
+        return $this->array[$key];
     }
 
     /**
@@ -36,7 +42,7 @@ class Query implements Bag
      */
     public function set(string $key, string $value)
     {
-        // TODO: Implement set() method.
+        $this->array[$key] = $value;
     }
 
     /**
@@ -44,11 +50,32 @@ class Query implements Bag
      */
     public function all(): array
     {
-        // TODO: Implement all() method.
+        return $this->array;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function replace(array $array)
     {
-        // TODO: Implement replace() method.
+        foreach ($array as $key => $value)
+        {
+            $this->array[$key] = $value;
+        }
+    }
+
+    /**
+     * @return Query
+     */
+    public static function createFromGlobals(): Query
+    {
+        $query = new Query();
+
+        foreach ($_GET as $key => $value)
+        {
+            $query->set($key, $value);
+        }
+
+        return $query;
     }
 }
