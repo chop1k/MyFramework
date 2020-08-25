@@ -83,4 +83,19 @@ class File
     {
         $this->size = $size;
     }
+
+    /**
+     * @param int $size
+     * @return false|string
+     */
+    public function getContent(int $size = -1)
+    {
+        $file = fopen($this->path, 'r');
+
+        $content = fread($file, $size < 0 ? $this->size : $size);
+
+        fclose($file);
+
+        return $content;
+    }
 }

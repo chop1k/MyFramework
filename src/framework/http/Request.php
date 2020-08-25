@@ -9,6 +9,7 @@ use framework\data\CookieBag;
 use framework\data\Cookies;
 use framework\data\FileBag;
 use framework\data\Files;
+use framework\data\HeaderBag;
 use framework\data\Headers;
 use framework\data\Query;
 
@@ -57,22 +58,22 @@ class Request
     }
 
     /**
-     * @var Bag $headers
+     * @var HeaderBag $headers
      */
-    private Bag $headers;
+    private HeaderBag $headers;
 
     /**
-     * @return Bag
+     * @return HeaderBag
      */
-    public function getHeaders(): Bag
+    public function getHeaders(): HeaderBag
     {
         return $this->headers;
     }
 
     /**
-     * @param Bag $headers
+     * @param HeaderBag $headers
      */
-    public function setHeaders(Bag $headers): void
+    public function setHeaders(HeaderBag $headers): void
     {
         $this->headers = $headers;
     }

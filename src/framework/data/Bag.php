@@ -19,13 +19,13 @@ interface Bag
      * @param string $key
      * @return string
      */
-    public function get(string $key): string;
+    public function get(string $key);
 
     /**
      * @param string $key
-     * @param string $value
+     * @param mixed $value
      */
-    public function set(string $key, string $value);
+    public function set(string $key, $value);
 
     /**
      * @return array

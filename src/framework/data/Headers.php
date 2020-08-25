@@ -4,7 +4,9 @@
 namespace framework\data;
 
 
-class Headers implements Bag
+use framework\Header;
+
+class Headers implements HeaderBag
 {
     public function __construct()
     {
@@ -32,7 +34,7 @@ class Headers implements Bag
     /**
      * @inheritDoc
      */
-    public function get(string $key): string
+    public function get(string $key): Header
     {
         return $this->array[strtoupper($key)];
     }
@@ -40,9 +42,15 @@ class Headers implements Bag
     /**
      * @inheritDoc
      */
-    public function set(string $key, string $value)
+    public function set(string $key, string $value, bool $new = true): void
     {
-        $this->array[strtoupper($key)] = $value;
+        $header = new Header();
+
+        $header->setName(strtoupper($key));
+        $header->setValue($value);
+        $header->setNew($new);
+
+        $this->array[$header->getName()] = $header;
     }
 
     /**
@@ -53,15 +61,20 @@ class Headers implements Bag
         return $this->array;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function replace(array $array)
+    public function allNew(): array
     {
-        foreach ($array as $key => $value)
+        $array = [];
+
+        /**
+         * @var Header $value
+         */
+        foreach ($this->array as $value)
         {
-            $this->array[strtoupper($key)] = $value;
+            if ($value->isNew())
+                $array[] = $value;
         }
+
+        return $array;
     }
 
     /**
@@ -78,7 +91,7 @@ class Headers implements Bag
 
             $key = substr($key, 0, strlen($key));
 
-            $headers->set($key, $value);
+            $headers->set($key, $value, false);
         }
 
         return $headers;

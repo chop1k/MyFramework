@@ -40,7 +40,7 @@ class Query implements Bag
     /**
      * @inheritDoc
      */
-    public function set(string $key, string $value)
+    public function set(string $key, $value)
     {
         $this->array[$key] = $value;
     }
