@@ -1,10 +1,16 @@
 <?php
 
-use framework\File;
+use Framework\App\Application;
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-$file = new File();
+require_once dirname(__DIR__).'/src/Loader.php';
+
+Loader::load(dirname(__DIR__).'/src/');
+
+$app = new Application();
+
+echo var_dump($app);
 
 //echo var_export($HTTP_POST_FILES);
 //echo var_export($HTTP_POST_VARS);

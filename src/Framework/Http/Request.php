@@ -1,17 +1,17 @@
 <?php
 
 
-namespace framework\http;
+namespace Framework\Http;
 
 
-use framework\data\Bag;
-use framework\data\CookieBag;
-use framework\data\Cookies;
-use framework\data\FileBag;
-use framework\data\Files;
-use framework\data\HeaderBag;
-use framework\data\Headers;
-use framework\data\Query;
+use Framework\Data\Bag;
+use Framework\Data\CookieBag;
+use Framework\Data\Cookies;
+use Framework\Data\FileBag;
+use Framework\Data\Files;
+use Framework\Data\HeaderBag;
+use Framework\Data\Headers;
+use Framework\Data\Query;
 
 class Request
 {

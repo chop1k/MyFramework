@@ -1,7 +1,7 @@
 <?php
 
 
-namespace framework;
+namespace Framework;
 
 
 class File

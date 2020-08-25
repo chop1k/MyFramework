@@ -1,10 +1,10 @@
 <?php
 
 
-namespace framework\app;
+namespace Framework\App;
 
-use framework\data\Bag;
-use framework\http\Request;
+use Framework\Data\Bag;
+use Framework\Http\Request;
 
 class Application
 {

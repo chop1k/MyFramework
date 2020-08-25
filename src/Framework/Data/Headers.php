@@ -1,10 +1,10 @@
 <?php
 
 
-namespace framework\data;
+namespace Framework\Data;
 
 
-use framework\Header;
+use Framework\Header;
 
 class Headers implements HeaderBag
 {
@@ -13,6 +13,9 @@ class Headers implements HeaderBag
         $this->array = [];
     }
 
+    /**
+     * @var array $array
+     */
     private array $array;
 
     /**

@@ -1,13 +1,21 @@
 <?php
 
 
-namespace framework\data;
+namespace Framework\Data;
 
 
-use framework\File;
+use Framework\File;
 
 class Files implements FileBag
 {
+    public function __construct()
+    {
+        $this->array = [];
+    }
+
+    /**
+     * @var array $array
+     */
     private array $array;
 
     /**

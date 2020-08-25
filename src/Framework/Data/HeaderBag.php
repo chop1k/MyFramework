@@ -1,10 +1,10 @@
 <?php
 
 
-namespace framework\data;
+namespace Framework\Data;
 
 
-use framework\Header;
+use Framework\Header;
 
 interface HeaderBag
 {

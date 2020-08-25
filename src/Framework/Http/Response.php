@@ -1,7 +1,7 @@
 <?php
 
 
-namespace framework\http;
+namespace Framework\Http;
 
 
 class Response

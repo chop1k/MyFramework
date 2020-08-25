@@ -1,11 +1,16 @@
 <?php
 
 
-namespace framework\data;
+namespace Framework\Data;
 
 
 class Cookies implements CookieBag
 {
+    public function __construct()
+    {
+        $this->cookies = [];
+    }
+
     /**
      * @var array $cookies
      */
@@ -73,7 +78,12 @@ class Cookies implements CookieBag
 
         foreach ($_COOKIE as $key => $value)
         {
+            $cookie = new Cookie();
 
+            $cookie->setName($key);
+            $cookie->setValue($value);
+
+            $cookies->set($cookie);
         }
 
         return $cookies;

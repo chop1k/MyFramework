@@ -1,7 +1,7 @@
 <?php
 
 
-namespace framework\data;
+namespace Framework\Data;
 
 
 class Cookie

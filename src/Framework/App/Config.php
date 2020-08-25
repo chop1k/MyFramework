@@ -1,10 +1,10 @@
 <?php
 
 
-namespace framework\data;
+namespace Framework\App;
 
 
-class Query implements Bag
+class Config
 {
     public function __construct()
     {
@@ -14,7 +14,7 @@ class Query implements Bag
     private array $array;
 
     /**
-     * @inheritDoc
+     * @return int
      */
     public function count(): int
     {
@@ -22,7 +22,8 @@ class Query implements Bag
     }
 
     /**
-     * @inheritDoc
+     * @param string $key
+     * @return bool
      */
     public function has(string $key): bool
     {
@@ -30,15 +31,17 @@ class Query implements Bag
     }
 
     /**
-     * @inheritDoc
+     * @param string $key
+     * @return string
      */
-    public function get(string $key): string
+    public function get(string $key)
     {
         return $this->array[$key];
     }
 
     /**
-     * @inheritDoc
+     * @param string $key
+     * @param mixed $value
      */
     public function set(string $key, $value)
     {
@@ -46,7 +49,7 @@ class Query implements Bag
     }
 
     /**
-     * @inheritDoc
+     * @return array
      */
     public function all(): array
     {
@@ -54,9 +57,10 @@ class Query implements Bag
     }
 
     /**
-     * @inheritDoc
+     * @param array $array
+     * @return void
      */
-    public function replace(array $array)
+    public function replace(array $array): void
     {
         foreach ($array as $key => $value)
         {
@@ -64,18 +68,4 @@ class Query implements Bag
         }
     }
 
-    /**
-     * @return Query
-     */
-    public static function createFromGlobals(): Query
-    {
-        $query = new Query();
-
-        foreach ($_GET as $key => $value)
-        {
-            $query->set($key, $value);
-        }
-
-        return $query;
-    }
 }
