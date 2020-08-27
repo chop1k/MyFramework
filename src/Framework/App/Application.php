@@ -5,104 +5,28 @@ namespace Framework\App;
 
 use Framework\Data\Bag;
 use Framework\Http\Request;
+use Framework\Routing\Route;
+use Framework\Routing\Tag;
 
 class Application
 {
     /**
-     * @var string $rootPath
+     * @var ApplicationConfig $config
      */
-    protected string $rootPath;
+    protected ApplicationConfig $config;
 
     /**
-     * @return string
+     * @return ApplicationConfig
      */
-    public function getRootPath(): string
-    {
-        return $this->rootPath;
-    }
-
-    /**
-     * @param string $rootPath
-     */
-    public function setRootPath(string $rootPath): void
-    {
-        $this->rootPath = $rootPath;
-    }
-
-    /**
-     * @var string $controllersPath
-     */
-    protected string $controllersPath;
-
-    /**
-     * @return string
-     */
-    public function getControllersPath(): string
-    {
-        return $this->controllersPath;
-    }
-
-    /**
-     * @param string $controllersPath
-     */
-    public function setControllersPath(string $controllersPath): void
-    {
-        $this->controllersPath = $controllersPath;
-    }
-
-    protected string $modelsPath;
-
-    /**
-     * @return string
-     */
-    public function getModelsPath(): string
-    {
-        return $this->modelsPath;
-    }
-
-    /**
-     * @param string $modelsPath
-     */
-    public function setModelsPath(string $modelsPath): void
-    {
-        $this->modelsPath = $modelsPath;
-    }
-
-    protected string $subscribersPath;
-
-    /**
-     * @return string
-     */
-    public function getSubscribersPath(): string
-    {
-        return $this->subscribersPath;
-    }
-
-    /**
-     * @param string $subscribersPath
-     */
-    public function setSubscribersPath(string $subscribersPath): void
-    {
-        $this->subscribersPath = $subscribersPath;
-    }
-
-    /**
-     * @var Bag $config
-     */
-    protected Bag $config;
-
-    /**
-     * @return Bag
-     */
-    public function getConfig(): Bag
+    public function getConfig(): ApplicationConfig
     {
         return $this->config;
     }
 
     /**
-     * @param Bag $config
+     * @param ApplicationConfig $config
      */
-    public function setConfig(Bag $config): void
+    public function setConfig(ApplicationConfig $config): void
     {
         $this->config = $config;
     }
@@ -111,6 +35,75 @@ class Application
     {
         $request = Request::createFromGlobals();
 
+        $route = $this->findRoute($request);
 
+        if (is_null($route))
+        {
+            return;
+            // TODO: return 404 response
+        }
+
+        if (!in_array($request->getMethod(), $route->getMethods()))
+        {
+            return;
+            // TODO: return 405 response
+        }
+
+        echo var_dump($route);
+    }
+
+    private function findRoute(Request $request): ?Route
+    {
+        $routes = require_once $this->getConfig()->getRoutesPath();
+
+        $url = $request->getUrl();
+
+        $parsedUrl = explode('/', parse_url($url, PHP_URL_PATH));
+
+        $urlCount = count($parsedUrl);
+
+        foreach ($routes as $name => $data)
+        {
+            $route = Route::fromArray($name, $data);
+
+            $path = $route->getPath();
+
+            if ($path == $url)
+                return $route;
+
+            $parsedPath = explode('/', $path);
+
+            if ($urlCount !== count($parsedPath))
+                continue;
+
+            $copyUrl = $parsedUrl;
+
+            $tags = $route->getTags();
+
+            /**
+             * @var Tag $tag
+             */
+            foreach ($tags as $tag)
+            {
+                if ($tag->getType() === 'integer' && !is_numeric($copyUrl[$tag->getStep()]))
+                    continue;
+
+                $copyUrl[$tag->getStep()] = ":{$tag->getName()}";
+            }
+
+
+            if (implode('/', $copyUrl) === $path)
+            {
+                foreach ($tags as $tag)
+                {
+                    if (is_null($tag->getValue()))
+                        $tag->setValue($parsedUrl[$tag->getStep()]);
+                }
+
+                return $route;
+            }
+        }
+
+        return null;
     }
 }

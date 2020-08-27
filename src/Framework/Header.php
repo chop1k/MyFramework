@@ -47,25 +47,4 @@ class Header
     {
         $this->value = $value;
     }
-
-    /**
-     * @var bool $new
-     */
-    protected bool $new;
-
-    /**
-     * @return bool
-     */
-    public function isNew(): bool
-    {
-        return $this->new;
-    }
-
-    /**
-     * @param bool $new
-     */
-    public function setNew(bool $new): void
-    {
-        $this->new = $new;
-    }
 }

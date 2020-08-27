@@ -14,7 +14,7 @@ class Loader
 
             if (is_dir($dir.$name))
                 Loader::load($dir.$name.'/');
-            else
+            elseif (strrpos($name, '.php', -1) !== false)
             {
                 require_once $dir.$name;
             }

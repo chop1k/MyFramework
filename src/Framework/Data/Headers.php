@@ -51,7 +51,6 @@ class Headers implements HeaderBag
 
         $header->setName(strtoupper($key));
         $header->setValue($value);
-        $header->setNew($new);
 
         $this->array[$header->getName()] = $header;
     }
@@ -62,22 +61,6 @@ class Headers implements HeaderBag
     public function all(): array
     {
         return $this->array;
-    }
-
-    public function allNew(): array
-    {
-        $array = [];
-
-        /**
-         * @var Header $value
-         */
-        foreach ($this->array as $value)
-        {
-            if ($value->isNew())
-                $array[] = $value;
-        }
-
-        return $array;
     }
 
     /**

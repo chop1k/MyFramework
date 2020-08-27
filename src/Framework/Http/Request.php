@@ -243,5 +243,9 @@ class Request
         $request->setCookies(Cookies::createFromGlobals());
         $request->setHeaders(Headers::createFromGlobals());
         $request->setFiles(Files::createFromGlobals());
+
+        // TODO: wait for revision
+
+        return $request;
     }
 }

@@ -35,9 +35,4 @@ interface HeaderBag
      * @return array
      */
     public function all(): array;
-
-    /**
-     * @return array
-     */
-    public function allNew(): array;
 }
