@@ -11,6 +11,7 @@ use Framework\Data\FileBag;
 use Framework\Data\Files;
 use Framework\Data\HeaderBag;
 use Framework\Data\Headers;
+use Framework\Data\Params;
 use Framework\Data\Query;
 
 class Request
@@ -163,6 +164,27 @@ class Request
     }
 
     /**
+     * @var Bag $params
+     */
+    private Bag $params;
+
+    /**
+     * @return Bag
+     */
+    public function getParams(): Bag
+    {
+        return $this->params;
+    }
+
+    /**
+     * @param Bag $params
+     */
+    public function setParams(Bag $params): void
+    {
+        $this->params = $params;
+    }
+
+    /**
      * @var int
      */
     private int $time;
@@ -243,6 +265,8 @@ class Request
         $request->setCookies(Cookies::createFromGlobals());
         $request->setHeaders(Headers::createFromGlobals());
         $request->setFiles(Files::createFromGlobals());
+
+        $request->setParams(new Params());
 
         // TODO: wait for revision
 

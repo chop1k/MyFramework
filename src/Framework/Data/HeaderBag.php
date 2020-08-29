@@ -15,21 +15,24 @@ interface HeaderBag
 
     /**
      * @param string $name
+     * @param bool $strict
      * @return bool
      */
-    public function has(string $name): bool;
+    public function has(string $name, bool $strict = false): bool;
 
     /**
      * @param string $name
+     * @param bool $strict
      * @return Header
      */
-    public function get(string $name): Header;
+    public function get(string $name, bool $strict = false): Header;
 
     /**
      * @param string $name
      * @param string $value
+     * @param bool $strict
      */
-    public function set(string $name, string $value): void;
+    public function set(string $name, string $value, bool $strict = false): void;
 
     /**
      * @return array

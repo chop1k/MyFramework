@@ -5,6 +5,8 @@ namespace Framework\Data;
 
 
 
+use Framework\Cookie;
+
 interface CookieBag
 {
     /**
@@ -34,6 +36,4 @@ interface CookieBag
      * @return array
      */
     public function all(): array;
-
-    public function allNew(): array;
 }

@@ -9,7 +9,7 @@ class ApplicationConfig
     /**
      * @var string $rootPath
      */
-    protected string $rootPath;
+    private string $rootPath;
 
     /**
      * @return string
@@ -30,7 +30,7 @@ class ApplicationConfig
     /**
      * @var string $controllersPath
      */
-    protected string $controllersPath;
+    private string $controllersPath;
 
     /**
      * @return string
@@ -48,7 +48,7 @@ class ApplicationConfig
         $this->controllersPath = $controllersPath;
     }
 
-    protected string $modelsPath;
+    private string $modelsPath;
 
     /**
      * @return string
@@ -66,7 +66,7 @@ class ApplicationConfig
         $this->modelsPath = $modelsPath;
     }
 
-    protected string $subscribersPath;
+    private string $subscribersPath;
 
     /**
      * @return string
@@ -87,7 +87,7 @@ class ApplicationConfig
     /**
      * @var string $routesPath
      */
-    protected string $routesPath;
+    private string $routesPath;
 
     /**
      * @return string
@@ -103,5 +103,26 @@ class ApplicationConfig
     public function setRoutesPath(string $routesPath): void
     {
         $this->routesPath = $routesPath;
+    }
+
+    /**
+     * @var string $frameworkPath
+     */
+    private string $frameworkPath;
+
+    /**
+     * @return string
+     */
+    public function getFrameworkPath(): string
+    {
+        return $this->frameworkPath;
+    }
+
+    /**
+     * @param string $frameworkPath
+     */
+    public function setFrameworkPath(string $frameworkPath): void
+    {
+        $this->frameworkPath = $frameworkPath;
     }
 }

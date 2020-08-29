@@ -2,25 +2,29 @@
 
 use Framework\App\Application;
 use Framework\App\ApplicationConfig;
+use Framework\Env\Env;
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
 require_once dirname(__DIR__).'/src/Loader.php';
 
-Loader::load(dirname(__DIR__).'/src/');
+Loader::load(dirname(__DIR__).'/src/Framework/');
+Loader::load(dirname(__DIR__).'/src/App/');
+
+Env::fromJson(dirname(__DIR__).'/.env.json');
 
 $config = new ApplicationConfig();
 
 $config->setRoutesPath(dirname(__DIR__).'/config/routes.php');
+$config->setControllersPath(dirname(__DIR__).'/config/controllers.php');
+$config->setSubscribersPath(dirname(__DIR__).'/config/subscribers.php');
+$config->setFrameworkPath(dirname(__DIR__).'/config/framework.php');
 
 $app = new Application();
 
 $app->setConfig($config);
 
-$app->handle();
-
-echo var_dump($app);
-
+$app->handle()->send();
 
 //$url = 'http://username:password@hostname:9090/path?arg=value#anchor';
 //

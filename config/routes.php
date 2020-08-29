@@ -3,7 +3,7 @@
 return [
     'route_name' => [
         'path' => '/test/path/:name',
-        'controller' => 'controller_name',
+        'controller' => 'test_controller',
         'methods' => [
             'GET', 'POST'
         ],

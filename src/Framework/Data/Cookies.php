@@ -4,6 +4,8 @@
 namespace Framework\Data;
 
 
+use Framework\Cookie;
+
 class Cookies implements CookieBag
 {
     public function __construct()
@@ -54,22 +56,6 @@ class Cookies implements CookieBag
     public function all(): array
     {
         return $this->cookies;
-    }
-
-    public function allNew(): array
-    {
-        $array = [];
-
-        /**
-         * @var Cookie $value
-         */
-        foreach ($this->cookies as $value)
-        {
-            if ($value->isNew())
-                $array[] = $value;
-        }
-
-        return $array;
     }
 
     public static function createFromGlobals(): Cookies

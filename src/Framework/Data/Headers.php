@@ -29,27 +29,37 @@ class Headers implements HeaderBag
     /**
      * @inheritDoc
      */
-    public function has(string $key): bool
+    public function has(string $key, bool $strict = false): bool
     {
-        return isset($this->array[strtoupper($key)]);
+        if ($strict)
+            return isset($this->array[$key]);
+        else
+            return isset($this->array[strtoupper($key)]);
     }
 
     /**
      * @inheritDoc
      */
-    public function get(string $key): Header
+    public function get(string $key, bool $strict = false): Header
     {
-        return $this->array[strtoupper($key)];
+        if (!$strict)
+            return $this->array[strtoupper($key)];
+
+        return $this->array[$key];
     }
 
     /**
      * @inheritDoc
      */
-    public function set(string $key, string $value, bool $new = true): void
+    public function set(string $key, string $value, bool $strict = false): void
     {
         $header = new Header();
 
-        $header->setName(strtoupper($key));
+        if ($strict)
+            $header->setName($key);
+        else
+            $header->setName(strtoupper($key));
+
         $header->setValue($value);
 
         $this->array[$header->getName()] = $header;
@@ -75,9 +85,21 @@ class Headers implements HeaderBag
             if (substr($key, 0 , 5) !== 'HTTP_')
                 continue;
 
-            $key = substr($key, 0, strlen($key));
+            $key = substr($key, 5, strlen($key));
 
             $headers->set($key, $value, false);
+        }
+
+        return $headers;
+    }
+
+    public static function fromArray(array $array): Headers
+    {
+        $headers = new Headers();
+
+        foreach ($array as $key => $value)
+        {
+            $headers->set($key, $value);
         }
 
         return $headers;
