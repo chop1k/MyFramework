@@ -3,20 +3,36 @@
 
 class Loader
 {
-    public static function load(string $dir)
+    public static function load(string $rootPath,array $paths)
     {
-        $dirs = scandir($dir);
-
-        foreach ($dirs as $name)
+        foreach ($paths as $path)
         {
-            if ($name === '..' || $name === '.')
-                continue;
+            $all = false;
 
-            if (is_dir($dir.$name))
-                Loader::load($dir.$name.'/');
-            elseif (strrpos($name, '.php', -1) !== false)
+            if (strrpos($path, '*') !== false)
+                $all = true;
+
+            $dir = dirname($rootPath.$path);
+
+            if ($all)
             {
-                require_once $dir.$name;
+                $files = scandir($dir);
+
+                foreach ($files as $value)
+                {
+                    if ($value === '..' || $value === '.')
+                        continue;
+
+                    if (is_dir($dir.'/'.$value))
+                        continue;
+
+
+                    require_once $dir.'/'.$value;
+                }
+            }
+            else
+            {
+                require_once $rootPath.$path;
             }
         }
     }

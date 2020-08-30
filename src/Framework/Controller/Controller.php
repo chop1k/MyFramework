@@ -4,6 +4,9 @@
 namespace Framework\Controller;
 
 
+use Exception;
+use Framework\Data\HandlerKit;
+
 class Controller
 {
     /**
@@ -67,6 +70,24 @@ class Controller
     public function setMethod(string $method): void
     {
         $this->method = $method;
+    }
+
+    public function getInstance(HandlerKit $handlerKit): object
+    {
+        $class = $this->getClass();
+
+        /**
+         * @var HandlerKit $instance
+         */
+        $instance = new $class();
+
+        if (!($instance instanceof HandlerKit))
+            throw new Exception('ffffvfv');
+
+        $instance->request = $handlerKit->request;
+        $instance->config = $handlerKit->config;
+
+        return $instance;
     }
 
     public static function fromArray(string $name, array $array): Controller

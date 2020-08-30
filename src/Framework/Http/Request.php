@@ -13,6 +13,7 @@ use Framework\Data\HeaderBag;
 use Framework\Data\Headers;
 use Framework\Data\Params;
 use Framework\Data\Query;
+use Framework\Data\Url;
 
 class Request
 {
@@ -38,22 +39,22 @@ class Request
     }
 
     /**
-     * @var string $url
+     * @var Url $url
      */
-    private string $url;
+    private Url $url;
 
     /**
-     * @return string
+     * @return Url
      */
-    public function getUrl(): string
+    public function getUrl(): Url
     {
         return $this->url;
     }
 
     /**
-     * @param string $url
+     * @param Url $url
      */
-    public function setUrl(string $url): void
+    public function setUrl(Url $url): void
     {
         $this->url = $url;
     }
@@ -254,7 +255,7 @@ class Request
     {
         $request = new Request();
 
-        $request->setUrl($_SERVER['REQUEST_URI']);
+        $request->setUrl(new Url($_SERVER['REQUEST_URI']));
         $request->setMethod($_SERVER['REQUEST_METHOD']);
         $request->setTime($_SERVER['REQUEST_TIME']);
 

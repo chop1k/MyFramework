@@ -68,4 +68,15 @@ class Config
         }
     }
 
+    public static function fromArray(array $array): Config
+    {
+        $config = new Config();
+
+        foreach ($array as $name => $value)
+        {
+            $config->set($name, $value);
+        }
+
+        return $config;
+    }
 }

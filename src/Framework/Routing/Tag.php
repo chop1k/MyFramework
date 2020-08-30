@@ -4,8 +4,6 @@
 namespace Framework\Routing;
 
 
-use Exception;
-
 class Tag
 {
     public function __construct()

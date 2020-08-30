@@ -8,8 +8,7 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 
 require_once dirname(__DIR__).'/src/Loader.php';
 
-Loader::load(dirname(__DIR__).'/src/Framework/');
-Loader::load(dirname(__DIR__).'/src/App/');
+Loader::load(dirname(__DIR__).'/src/', require_once dirname(__DIR__).'/config/paths.php');
 
 Env::fromJson(dirname(__DIR__).'/.env.json');
 
@@ -20,11 +19,7 @@ $config->setControllersPath(dirname(__DIR__).'/config/controllers.php');
 $config->setSubscribersPath(dirname(__DIR__).'/config/subscribers.php');
 $config->setFrameworkPath(dirname(__DIR__).'/config/framework.php');
 
-$app = new Application();
-
-$app->setConfig($config);
-
-$app->handle()->send();
+Application::start($config)->send();
 
 //$url = 'http://username:password@hostname:9090/path?arg=value#anchor';
 //

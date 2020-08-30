@@ -111,6 +111,44 @@ class Route
         $this->tags = $tags;
     }
 
+    public function isCorrespondTags(array $explodedPath): bool
+    {
+        /**
+         * @var Tag $tag
+         */
+        foreach ($this->tags as $tag)
+        {
+            if ($tag->getType() === 'integer' && !is_numeric($explodedPath[$tag->getStep()]))
+                return false;
+        }
+
+        return true;
+    }
+
+    public function replacePathValuesWithNames(array $explodedPath): string
+    {
+        /**
+         * @var Tag $tag
+         */
+        foreach ($this->tags as $tag)
+        {
+            $explodedPath[$tag->getStep()] = ":{$tag->getName()}";
+        }
+
+        return implode('/', $explodedPath);
+    }
+
+    public function computeTagsValues(array $explodedPath): void
+    {
+        /**
+         * @var Tag $tag
+         */
+        foreach ($this->tags as $tag)
+        {
+            $tag->setValue($explodedPath[$tag->getStep()]);
+        }
+    }
+
     public static function fromArray(string $name, array $array): Route
     {
         $route = new Route();

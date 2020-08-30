@@ -4,8 +4,8 @@
 namespace Framework\Http;
 
 
-use Framework\HeaderBag;
-use Framework\Headers;
+use Framework\Data\HeaderBag;
+use Framework\Data\Headers;
 use Framework\Header;
 
 class Response
@@ -90,5 +90,48 @@ class Response
         }
 
         echo $this->getBody();
+    }
+
+    public static function getFromStatus(int $status): Response
+    {
+        switch ($status)
+        {
+            case 404:
+                return self::getNotFound();
+            case 405:
+                return self::getMethodNotAllowed();
+            default:
+                return self::getInternalServerError();
+        }
+    }
+
+    public static function getInternalServerError(): Response
+    {
+        $response = new Response();
+
+        $response->setStatus(500);
+        $response->setHeaders(new Headers());
+
+        return $response;
+    }
+
+    public static function getMethodNotAllowed(): Response
+    {
+        $response = new Response();
+
+        $response->setStatus(405);
+        $response->setHeaders(new Headers());
+
+        return $response;
+    }
+
+    public static function getNotFound(): Response
+    {
+        $response = new Response();
+
+        $response->setStatus(404);
+        $response->setHeaders(new Headers());
+
+        return $response;
     }
 }
