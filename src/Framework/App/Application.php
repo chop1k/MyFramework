@@ -6,15 +6,18 @@ namespace Framework\App;
 use Exception;
 use Framework\Controller\Controller;
 use Framework\Data\HandlerKit;
+use Framework\Exceptions\InvalidResponseException;
+use Framework\Exceptions\InvalidSubscriberException;
 use Framework\Http\Request;
 use Framework\Http\Response;
+use Framework\Middleware\AbstractMiddleware;
+use Framework\Middleware\Middleware;
 use Framework\Routing\Route;
 use Framework\Routing\Routes;
 use Framework\Subscriber\AbstractSubscriber;
 use Framework\Subscriber\Event;
 use Framework\Subscriber\Subscriber;
 use Framework\Subscriber\Subscribers;
-use ReflectionClass;
 
 class Application
 {
@@ -61,43 +64,43 @@ class Application
     }
 
     /**
-     * @var Route $route
+     * @var Route|null $route
      */
-    private Route $route;
+    private ?Route $route;
 
     /**
-     * @return Route
+     * @return Route|null
      */
-    public function getRoute(): Route
+    public function getRoute(): ?Route
     {
         return $this->route;
     }
 
     /**
-     * @param Route $route
+     * @param Route|null $route
      */
-    public function setRoute(Route $route): void
+    public function setRoute(?Route $route): void
     {
         $this->route = $route;
     }
 
     /**
-     * @var Exception $exception
+     * @var Exception|null $exception
      */
-    private Exception $exception;
+    private ?Exception $exception;
 
     /**
-     * @return Exception
+     * @return Exception|null
      */
-    public function getException(): Exception
+    public function getException(): ?Exception
     {
         return $this->exception;
     }
 
     /**
-     * @param Exception $exception
+     * @param Exception|null $exception
      */
-    public function setException(Exception $exception): void
+    public function setException(?Exception $exception): void
     {
         $this->exception = $exception;
     }
@@ -123,62 +126,93 @@ class Application
         $this->handlerKit = $handlerKit;
     }
 
+    /**
+     * @var Response|null $response
+     */
+    private ?Response $response;
+
+    /**
+     * @return Response|null
+     */
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param Response|null $response
+     */
+    public function setResponse(?Response $response): void
+    {
+        $this->response = $response;
+    }
+
     public function __construct()
     {
-        $this->handlerKit = new HandlerKit();
+        $this->setHandlerKit(new HandlerKit());
+        $this->setException(null);
+        $this->setRoute(null);
+        $this->setResponse(null);
     }
 
     public function invoke(int $event): ?Response
     {
-        $class = new ReflectionClass(Event::class);
+        $event = new Event($event);
 
-        foreach ($class->getConstants() as $name => $value) {
-            if ($event !== $value)
-                continue;
+        if ($event->isMultiple())
+            $getMethod = 'get' . $event->getName() . 'Subscribers';
+        else
+            $getMethod = 'get' . $event->getName() . 'Subscriber';
 
-            $subscribersMethod = 'get' . $name . (Event::isMultiple($value) ? 'Subscribers' : 'Subscriber');
+        $subscribers = $this->getSubscribers()->$getMethod();
 
-            $subscribers = $this->subscribers->$subscribersMethod();
+        if (is_array($subscribers))
+        {
+            $response = null;
 
-            $method = 'on' . $name;
+            foreach ($subscribers as $subscriber)
+            {
+                $response = $this->invokeOne($subscriber, $event);
 
-            if (is_array($subscribers)) {
-                if (count($subscribers) <= 0)
-                    return null;
-
-                $response = null;
-
-                foreach ($subscribers as $subscriber) {
-                    $response = $this->invokeOne($subscriber, $method);
-
-                    if (!is_null($response))
-                        return $response;
-                }
-
-                return is_null($response) ? Response::getFromStatus(Event::getStatus($event)) : $response;
-            } elseif (!is_null($subscribers)) {
-                return $this->invokeOne($subscribers, $method);
+                if (!is_null($response))
+                    return $response;
             }
-            else
-                return Response::getFromStatus(Event::getStatus($event));
+
+            return $response;
         }
+
+        if ($subscribers instanceof Subscriber)
+        {
+            return $this->invokeOne($subscribers, $event);
+        }
+
+        if (!$event->isNullable())
+            return Response::getFromStatus($event->getStatus());
+
+        if ($event === Event::Response)
+            return $this->getResponse();
 
         return null;
     }
 
-    private function invokeOne(Subscriber $subscriber, string $method): ?Response
+    private function invokeOne(Subscriber $subscriber, Event $event): ?Response
     {
         /**
          * @var AbstractSubscriber $instance
          */
         $instance = $subscriber->getInstance();
 
-        if (!($instance instanceof AbstractSubscriber) || !is_subclass_of($instance, $subscriber->getInterface()))
-            throw new Exception('fffff'); // TODO: need a normal exception
+        if (!($instance instanceof AbstractSubscriber) || !is_subclass_of($instance, $event->getInterface()))
+            throw new InvalidSubscriberException('subscriber must be instance of ' . AbstractSubscriber::class . ', got ' . gettype($instance));
 
 
         $instance->request = $this->handlerKit->request;
         $instance->config = $this->handlerKit->config;
+        $instance->exception = $this->getException();
+        $instance->route = $this->getRoute();
+        $instance->response = $this->getResponse();
+
+        $method = 'on' . $event->getName();
 
         return $instance->$method();
     }
@@ -198,48 +232,149 @@ class Application
 
         $app->setHandlerKit($kit);
 
-        $response = $app->invoke(Event::Request);
+        $invokeException = function (Exception $exception, Application $app): Response
+        {
+            $app->setException($exception);
 
-        if (!is_null($response))
+            $response = $app->invoke(Event::Exception);
+
+            if (is_null($response))
+                throw $exception;
+
             return $response;
+        };
+
+        $invokeResponse = function (Response $response, Application $app): Response
+        {
+            $app->setResponse($response);
+
+            $app->invoke(Event::Response);
+
+            return $response;
+        };
+
+        $invokeMiddleware = function (bool $before, array $middleware, Controller $controller, Application $app)
+        {
+            $list = $before ? $controller->getBeforeMiddleware() : $controller->getAfterMiddleware();
+
+            $response = null;
+
+            foreach ($list as $name)
+            {
+                if (!isset($middleware[$name]))
+                    throw new Exception("undefined middleware with name $name");
+
+                $middlewareInstance = Middleware::fromArray($name, $middleware[$name]);
+
+                $instance = $middlewareInstance->getInstance();
+
+                if (!($instance instanceof AbstractMiddleware))
+                    throw new Exception('middleware instance must be instance of ' . AbstractMiddleware::class . ', got ' . gettype($instance));
+
+                $instance->response = $app->getResponse();
+                $instance->request = $app->getHandlerKit()->request;
+                $instance->config = $app->getHandlerKit()->config;
+
+                $method = $middlewareInstance->getMethod();
+
+                $response = $instance->$method();
+
+                if (is_bool($response))
+                    break;
+
+                if ($response instanceof Response)
+                    break;
+            }
+
+            return $response;
+        };
+
+        try {
+            $response = $app->invoke(Event::Request);
+
+            if (!is_null($response))
+                return $invokeResponse($response, $app);
+
+        } catch (Exception $exception) {
+            return $invokeResponse($invokeException($exception, $app), $app);
+        }
 
         $route = Routes::find(require_once $config->getRoutesPath(), $request->getUrl()->getPath());
 
         $app->setRoute($route);
 
-        if (is_null($route))
-        {
-            return $app->invoke(Event::NotFound);
+        if (is_null($route)) {
+            try {
+                return $invokeResponse($app->invoke(Event::NotFound), $app);
+            } catch (Exception $exception) {
+                return $invokeResponse($invokeException($exception, $app), $app);
+            }
         }
 
-        if (!in_array($request->getMethod(), $route->getMethods()))
-        {
-            return $app->invoke(Event::MethodNotAllowed);
+        if (!in_array($request->getMethod(), $route->getMethods())) {
+            try {
+                return $invokeResponse($app->invoke(Event::MethodNotAllowed), $app);
+            } catch (Exception $exception) {
+                return $invokeResponse($invokeException($exception, $app), $app);
+            }
         }
 
         $controllers = require_once $config->getControllersPath();
 
+        if (!isset($controllers[$route->getController()])) {
+            try {
+                return $invokeResponse($app->invoke(Event::ControllerNotFound), $app);
+            } catch (Exception $exception) {
+                return $invokeResponse($invokeException($exception, $app), $app);
+            }
+        }
+
         if (!isset($controllers[$route->getController()]))
         {
-            return $app->invoke(Event::ControllerNotFound);
+            try {
+                throw new Exception("controller with name {$route->getController()} not defined in {$config->getControllersPath()}");
+            } catch (Exception $exception) {
+                return $invokeResponse($invokeException($exception, $app), $app);
+            }
         }
 
         $controller = Controller::fromArray($route->getController(), $controllers[$route->getController()]);
 
+        $middleware = require_once $config->getMiddlewarePath();
+
+        try {
+            $response = $invokeMiddleware(true, $middleware, $controller, $app);
+
+            if ($response instanceof Response)
+                return $invokeResponse($response, $app);
+        } catch (Exception $exception)
+        {
+            return $invokeResponse($invokeException($exception, $app), $app);
+        }
+
         $app->setController($controller);
 
-        /**
-         * @var HandlerKit $instance
-         */
-        $instance = $controller->getInstance($kit);
+        try {
+            /**
+             * @var HandlerKit $instance
+             */
+            $instance = $controller->getInstance($kit);
 
-        $method = $controller->getMethod();
+            $method = $controller->getMethod();
 
-        $response = $instance->$method();
+            $response = $instance->$method();
 
-        if (!($response instanceof Response))
-            throw new Exception('gvvfvf');
+            if (!($response instanceof Response))
+                throw new InvalidResponseException('response must be instance of ' . Response::class . ', got ' . gettype($response));
 
-        return $response;
+            $middlewareResponse = $invokeMiddleware(false, $middleware, $controller, $app);
+
+            if ($middlewareResponse instanceof Response)
+                return $invokeResponse($middlewareResponse, $app);
+
+            return $invokeResponse($response, $app);
+        } catch (Exception $exception) {
+            return $invokeResponse($invokeException($exception, $app), $app);
+        }
     }
 }

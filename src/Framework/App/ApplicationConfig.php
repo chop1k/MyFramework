@@ -125,4 +125,25 @@ class ApplicationConfig
     {
         $this->frameworkPath = $frameworkPath;
     }
+
+    /**
+     * @var string $middlewarePath
+     */
+    private string $middlewarePath;
+
+    /**
+     * @return string
+     */
+    public function getMiddlewarePath(): string
+    {
+        return $this->middlewarePath;
+    }
+
+    /**
+     * @param string $middlewarePath
+     */
+    public function setMiddlewarePath(string $middlewarePath): void
+    {
+        $this->middlewarePath = $middlewarePath;
+    }
 }

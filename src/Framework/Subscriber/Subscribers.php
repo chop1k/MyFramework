@@ -132,6 +132,27 @@ class Subscribers
         $this->controllerNotFoundSubscriber = $controllerNotFoundSubscriber;
     }
 
+    /**
+     * @var array $responseSubscribers
+     */
+    private array $responseSubscribers;
+
+    /**
+     * @return array
+     */
+    public function getResponseSubscribers(): array
+    {
+        return $this->responseSubscribers;
+    }
+
+    /**
+     * @param Subscriber $subscriber
+     */
+    public function addResponseSubscribers(Subscriber $subscriber): void
+    {
+        $this->responseSubscribers[] = $subscriber;
+    }
+
     public function __construct()
     {
         $this->requestSubscribers = [];
@@ -140,6 +161,7 @@ class Subscribers
         $this->notFoundSubscriber = null;
         $this->methodNotAllowedSubscriber = null;
         $this->controllerNotFoundSubscriber = null;
+        $this->responseSubscribers = [];
     }
 
     public static function fromArray(array $array): Subscribers
@@ -164,6 +186,8 @@ class Subscribers
                     $subscribers->addRouteFoundSubscriber($subscriber); break;
                 case Event::ControllerNotFound:
                     $subscribers->setControllerNotFoundSubscriber($subscriber); break;
+                case Event::Response:
+                    $subscribers->addResponseSubscribers($subscriber); break;
             }
         }
 

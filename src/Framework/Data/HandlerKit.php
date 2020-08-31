@@ -6,6 +6,7 @@ namespace Framework\Data;
 
 use Framework\App\Config;
 use Framework\Http\Request;
+use Framework\Http\Response;
 
 class HandlerKit
 {
@@ -18,4 +19,9 @@ class HandlerKit
      * @var Request $request
      */
     public Request $request;
+
+    /**
+     * @var Response|null $response
+     */
+    public ?Response $response;
 }

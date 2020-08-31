@@ -17,12 +17,12 @@ class Env
         $data = file_get_contents($path);
 
         if ($data === false)
-            throw new Exception('fffff'); // TODO: need a normal exception
+            throw new Exception('cannot access file ' . $path);
 
         $json = json_decode($data);
 
         if (is_null($json))
-            throw new Exception('ddd'); // TODO: need a normal exception
+            throw new Exception('json parse error');
 
         foreach ($json as $key => $value)
         {

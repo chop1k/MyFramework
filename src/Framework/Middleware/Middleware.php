@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Framework\Subscriber;
+namespace Framework\Middleware;
 
 
-class Subscriber
+class Middleware
 {
     /**
      * @var string $name
@@ -49,35 +49,24 @@ class Subscriber
     }
 
     /**
-     * @var int
+     * @var string $method
      */
-    private int $event;
+    private string $method;
 
     /**
-     * @return int
+     * @return string
      */
-    public function getEvent(): int
+    public function getMethod(): string
     {
-        return $this->event;
+        return $this->method;
     }
 
     /**
-     * @param int $event
+     * @param string $method
      */
-    public function setEvent(int $event): void
+    public function setMethod(string $method): void
     {
-        $this->event = $event;
-    }
-
-    public static function fromArray(string $name, array $array): Subscriber
-    {
-        $subscriber = new Subscriber();
-
-        $subscriber->setName($name);
-        $subscriber->setClass($array['class']);
-        $subscriber->setEvent($array['event']);
-
-        return $subscriber;
+        $this->method = $method;
     }
 
     public function getInstance(): object
@@ -85,5 +74,16 @@ class Subscriber
         $class = $this->getClass();
 
         return new $class();
+    }
+
+    public static function fromArray(string $name, array $array): Middleware
+    {
+        $middleware = new Middleware();
+
+        $middleware->setName($name);
+        $middleware->setClass($array['class']);
+        $middleware->setMethod($array['method']);
+
+        return $middleware;
     }
 }

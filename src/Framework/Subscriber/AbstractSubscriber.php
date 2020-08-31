@@ -11,12 +11,12 @@ use Framework\Routing\Route;
 class AbstractSubscriber extends HandlerKit
 {
     /**
-     * @var Exception $exception
+     * @var Exception|null $exception
      */
-    public Exception $exception;
+    public ?Exception $exception;
 
     /**
-     * @var Route $route
+     * @var Route|null $route
      */
-    public Route $route;
+    public ?Route $route;
 }

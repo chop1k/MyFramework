@@ -4,8 +4,8 @@
 namespace Framework\Controller;
 
 
-use Exception;
 use Framework\Data\HandlerKit;
+use Framework\Exceptions\InvalidControllerException;
 
 class Controller
 {
@@ -72,6 +72,54 @@ class Controller
         $this->method = $method;
     }
 
+    /**
+     * @var array $beforeMiddleware
+     */
+    private array $beforeMiddleware;
+
+    /**
+     * @return array
+     */
+    public function getBeforeMiddleware(): array
+    {
+        return $this->beforeMiddleware;
+    }
+
+    /**
+     * @param string $middleware
+     */
+    public function addBeforeMiddleware(string $middleware): void
+    {
+        $this->beforeMiddleware[] = $middleware;
+    }
+
+    /**
+     * @var array $afterMiddleware
+     */
+    private array $afterMiddleware;
+
+    /**
+     * @return array
+     */
+    public function getAfterMiddleware(): array
+    {
+        return $this->afterMiddleware;
+    }
+
+    /**
+     * @param string $middleware
+     */
+    public function addAfterMiddleware(string $middleware): void
+    {
+        $this->afterMiddleware[] = $middleware;
+    }
+
+    public function __construct()
+    {
+        $this->beforeMiddleware = [];
+        $this->afterMiddleware = [];
+    }
+
     public function getInstance(HandlerKit $handlerKit): object
     {
         $class = $this->getClass();
@@ -82,7 +130,7 @@ class Controller
         $instance = new $class();
 
         if (!($instance instanceof HandlerKit))
-            throw new Exception('ffffvfv');
+            throw new InvalidControllerException('invalid controller instance, instance must extends by '.HandlerKit::class);
 
         $instance->request = $handlerKit->request;
         $instance->config = $handlerKit->config;
@@ -97,6 +145,16 @@ class Controller
         $controller->setName($name);
         $controller->setClass($array['class']);
         $controller->setMethod($array['method']);
+
+        foreach ($array['middleware']['before'] as $name)
+        {
+            $controller->addBeforeMiddleware($name);
+        }
+
+        foreach ($array['middleware']['after'] as $name)
+        {
+            $controller->addAfterMiddleware($name);
+        }
 
         return $controller;
     }

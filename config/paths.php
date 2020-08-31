@@ -11,9 +11,11 @@ return [
     'Framework/Model/*.php',
     'Framework/Controller/*.php',
     'Framework/Subscriber/*.php',
+    'Framework/Middleware/*.php',
     'Framework/App/*.php',
     'App/*.php',
     'App/Models/*.php',
     'App/Controllers/*.php',
     'App/Subscribers/*.php',
+    'App/Middleware/*.php',
 ];

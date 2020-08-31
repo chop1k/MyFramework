@@ -10,8 +10,11 @@ use Framework\Header;
 
 class Response
 {
-    public function __construct()
+    public function __construct($body, int $status, array $headers = [])
     {
+        $this->setBody($body);
+        $this->setStatus($status);
+        $this->setHeaders(Headers::fromArray($headers));
     }
 
     /**
@@ -79,12 +82,12 @@ class Response
 
     public function send()
     {
-        http_response_code($this->status);
+        http_response_code($this->getStatus());
 
         /**
          * @var Header $header
          */
-        foreach ($this->headers->all() as $header)
+        foreach ($this->getHeaders()->all() as $header)
         {
             header($header->getName().':'.$header->getValue());
         }
@@ -97,41 +100,36 @@ class Response
         switch ($status)
         {
             case 404:
-                return self::getNotFound();
+                return self::getNotFound(null);
             case 405:
-                return self::getMethodNotAllowed();
+                return self::getMethodNotAllowed(null);
             default:
-                return self::getInternalServerError();
+                return self::getInternalServerError(null);
         }
     }
 
-    public static function getInternalServerError(): Response
+    public static function getInternalServerError($body, array $headers = []): Response
     {
-        $response = new Response();
-
-        $response->setStatus(500);
-        $response->setHeaders(new Headers());
-
-        return $response;
+        return new Response($body, 500, $headers);
     }
 
-    public static function getMethodNotAllowed(): Response
+    public static function getMethodNotAllowed($body, array $headers = []): Response
     {
-        $response = new Response();
-
-        $response->setStatus(405);
-        $response->setHeaders(new Headers());
-
-        return $response;
+        return new Response($body, 405, $headers);
     }
 
-    public static function getNotFound(): Response
+    public static function getNotFound($body, array $headers = []): Response
     {
-        $response = new Response();
+        return new Response($body, 404, $headers);
+    }
 
-        $response->setStatus(404);
-        $response->setHeaders(new Headers());
+    public static function getForbidden($body, array $headers = []): Response
+    {
+        return new Response($body, 403, $headers);
+    }
 
-        return $response;
+    public static function getBagRequest($body, array $headers = []): Response
+    {
+        return new Response($body, 400, $headers);
     }
 }

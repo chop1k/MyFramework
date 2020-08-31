@@ -5,19 +5,15 @@ namespace App\Controllers;
 
 
 use Framework\Controller\AbstractController;
-use Framework\Data\Headers;
 use Framework\Http\Response;
 
+/**
+ * this class here only for testing
+ */
 class TestController extends AbstractController
 {
     public function index(): Response
     {
-        $response = new Response();
-
-        $response->setBody('ok');
-        $response->setHeaders(new Headers());
-        $response->setStatus(200);
-
-        return $response;
+        return new Response('null', 200);
     }
 }
