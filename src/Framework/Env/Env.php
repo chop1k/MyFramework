@@ -6,9 +6,14 @@ namespace Framework\Env;
 
 use Exception;
 
+/**
+ * Class Env contains shortcuts to work with env.
+ * @package Framework\Env
+ */
 class Env
 {
     /**
+     * Shortcut which parses json with given path and imports data to global end variable.
      * @param string $path
      * @throws Exception
      */

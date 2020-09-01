@@ -15,14 +15,20 @@ use Framework\Data\Params;
 use Framework\Data\Query;
 use Framework\Data\Url;
 
+/**
+ * Class Request represents request.
+ * @package Framework\Http
+ */
 class Request
 {
     /**
+     * Contains request method.
      * @var string $method
      */
     private string $method;
 
     /**
+     * Returns request method.
      * @return string
      */
     public function getMethod()
@@ -31,6 +37,7 @@ class Request
     }
 
     /**
+     * Sets request method.
      * @param string $method
      */
     public function setMethod(string $method): void
@@ -39,11 +46,13 @@ class Request
     }
 
     /**
+     * Contains request url.
      * @var Url $url
      */
     private Url $url;
 
     /**
+     * Returns request url.
      * @return Url
      */
     public function getUrl(): Url
@@ -52,6 +61,7 @@ class Request
     }
 
     /**
+     * Sets request url.
      * @param Url $url
      */
     public function setUrl(Url $url): void
@@ -60,11 +70,13 @@ class Request
     }
 
     /**
+     * Contains request headers.
      * @var HeaderBag $headers
      */
     private HeaderBag $headers;
 
     /**
+     * Returns request headers.
      * @return HeaderBag
      */
     public function getHeaders(): HeaderBag
@@ -73,6 +85,7 @@ class Request
     }
 
     /**
+     * Sets request headers.
      * @param HeaderBag $headers
      */
     public function setHeaders(HeaderBag $headers): void
@@ -81,11 +94,13 @@ class Request
     }
 
     /**
+     * Contains request cookies.
      * @var CookieBag $cookies
      */
     private CookieBag $cookies;
 
     /**
+     * Returns request cookies.
      * @return CookieBag
      */
     public function getCookies(): CookieBag
@@ -94,6 +109,7 @@ class Request
     }
 
     /**
+     * Sets request cookies.
      * @param CookieBag $cookies
      */
     public function setCookies(CookieBag $cookies): void
@@ -102,11 +118,13 @@ class Request
     }
 
     /**
+     * Contains request query.
      * @var Bag $query
      */
     private Bag $query;
 
     /**
+     * Returns request query.
      * @return Bag
      */
     public function getQuery(): Bag
@@ -115,6 +133,7 @@ class Request
     }
 
     /**
+     * Sets request query.
      * @param Bag $query
      */
     public function setQuery(Bag $query): void
@@ -123,11 +142,13 @@ class Request
     }
 
     /**
+     * Contains request body data.
      * @var Bag $request
      */
     private Bag $request;
 
     /**
+     * Returns request body data.
      * @return Bag
      */
     public function getRequest(): Bag
@@ -136,6 +157,7 @@ class Request
     }
 
     /**
+     * Sets request body data.
      * @param Bag $request
      */
     public function setRequest(Bag $request): void
@@ -144,11 +166,13 @@ class Request
     }
 
     /**
+     * Contains request files.
      * @var FileBag
      */
     private FileBag $files;
 
     /**
+     * Returns request files.
      * @return FileBag
      */
     public function getFiles(): FileBag
@@ -157,6 +181,7 @@ class Request
     }
 
     /**
+     * Sets request files.
      * @param FileBag $files
      */
     public function setFiles(FileBag $files): void
@@ -165,11 +190,13 @@ class Request
     }
 
     /**
+     * Contains request params.
      * @var Bag $params
      */
     private Bag $params;
 
     /**
+     * Return request params.
      * @return Bag
      */
     public function getParams(): Bag
@@ -178,6 +205,7 @@ class Request
     }
 
     /**
+     * Sets request params.
      * @param Bag $params
      */
     public function setParams(Bag $params): void
@@ -186,11 +214,13 @@ class Request
     }
 
     /**
+     * Contains time of request in unix.
      * @var int
      */
     private int $time;
 
     /**
+     * Return time of request in unix.
      * @return int
      */
     public function getTime(): int
@@ -199,6 +229,7 @@ class Request
     }
 
     /**
+     * Sets time of request in unix.
      * @param int $time
      */
     public function setTime(int $time): void
@@ -207,11 +238,13 @@ class Request
     }
 
     /**
+     * Contains remote address.
      * @var string $addr
      */
     private string $addr;
 
     /**
+     * Returns remote address.
      * @return string
      */
     public function getAddr(): string
@@ -220,6 +253,7 @@ class Request
     }
 
     /**
+     * Sets remote address.
      * @param string $addr
      */
     public function setAddr(string $addr): void
@@ -228,11 +262,13 @@ class Request
     }
 
     /**
+     * Contains port.
      * @var int $port
      */
     private int $port;
 
     /**
+     * Returns port.
      * @return int
      */
     public function getPort(): int
@@ -241,6 +277,7 @@ class Request
     }
 
     /**
+     * Sets port.
      * @param int $port
      */
     public function setPort(int $port): void
@@ -249,6 +286,7 @@ class Request
     }
 
     /**
+     * Shortcut for creating request from globals.
      * @return Request
      */
     public static function createFromGlobals(): Request
@@ -268,8 +306,6 @@ class Request
         $request->setFiles(Files::createFromGlobals());
 
         $request->setParams(new Params());
-
-        // TODO: wait for revision
 
         return $request;
     }

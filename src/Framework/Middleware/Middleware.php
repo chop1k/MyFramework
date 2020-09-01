@@ -3,15 +3,20 @@
 
 namespace Framework\Middleware;
 
-
+/**
+ * Class Middleware represents middleware.
+ * @package Framework\Middleware
+ */
 class Middleware
 {
     /**
+     * Contains name of middleware.
      * @var string $name
      */
     private string $name;
 
     /**
+     * Returns name of middleware.
      * @return string
      */
     public function getName(): string
@@ -20,6 +25,7 @@ class Middleware
     }
 
     /**
+     * Sets name of middleware.
      * @param string $name
      */
     public function setName(string $name): void
@@ -28,11 +34,13 @@ class Middleware
     }
 
     /**
+     * Contains class of middleware.
      * @var string $class
      */
     private string $class;
 
     /**
+     * Returns class of middleware.
      * @return string
      */
     public function getClass(): string
@@ -41,6 +49,7 @@ class Middleware
     }
 
     /**
+     * Sets class of middleware.
      * @param string $class
      */
     public function setClass(string $class): void
@@ -49,11 +58,13 @@ class Middleware
     }
 
     /**
+     * Contains method of middleware.
      * @var string $method
      */
     private string $method;
 
     /**
+     * Returns method of middleware.
      * @return string
      */
     public function getMethod(): string
@@ -62,6 +73,7 @@ class Middleware
     }
 
     /**
+     * Sets method of middleware.
      * @param string $method
      */
     public function setMethod(string $method): void
@@ -69,6 +81,10 @@ class Middleware
         $this->method = $method;
     }
 
+    /**
+     * Gets instance of middleware.
+     * @return object
+     */
     public function getInstance(): object
     {
         $class = $this->getClass();

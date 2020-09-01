@@ -6,14 +6,22 @@ namespace Framework\Data;
 
 use Framework\Cookie;
 
+/**
+ * Class Cookies represents implementation cookie bag.
+ * @package Framework\Data
+ */
 class Cookies implements CookieBag
 {
+    /**
+     * Cookies constructor.
+     */
     public function __construct()
     {
         $this->cookies = [];
     }
 
     /**
+     * Contains array of cookies.
      * @var array $cookies
      */
     private array $cookies;
@@ -58,6 +66,10 @@ class Cookies implements CookieBag
         return $this->cookies;
     }
 
+    /**
+     * Shortcut for creating cookie bag from globals.
+     * @return Cookies
+     */
     public static function createFromGlobals(): Cookies
     {
         $cookies = new Cookies();

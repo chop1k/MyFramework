@@ -4,6 +4,7 @@
 namespace App\Controllers;
 
 
+use Exception;
 use Framework\Controller\AbstractController;
 use Framework\Http\Response;
 
@@ -14,6 +15,8 @@ class TestController extends AbstractController
 {
     public function index(): Response
     {
+        throw new Exception('g');
+
         return new Response('null', 200);
     }
 }

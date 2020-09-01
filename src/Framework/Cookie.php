@@ -3,15 +3,20 @@
 
 namespace Framework;
 
-
+/**
+ * Class Cookie represents cookie.
+ * @package Framework
+ */
 class Cookie
 {
     /**
+     * Contains cookie name.
      * @var string
      */
     protected string $name;
 
     /**
+     * Returns cookie name.
      * @return string
      */
     public function getName(): string
@@ -20,6 +25,7 @@ class Cookie
     }
 
     /**
+     * Sets cookie name.
      * @param string $name
      */
     public function setName(string $name): void
@@ -28,11 +34,13 @@ class Cookie
     }
 
     /**
+     * Contains cookie value.
      * @var string
      */
     protected string $value;
 
     /**
+     * Returns cookie value
      * @return string
      */
     public function getValue(): string
@@ -41,6 +49,7 @@ class Cookie
     }
 
     /**
+     * Sets cookie value.
      * @param string $value
      */
     public function setValue(string $value): void

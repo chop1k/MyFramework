@@ -6,7 +6,18 @@ use App\Subscribers\ResponseSubscriber;
 use Framework\Subscriber\Event;
 
 /**
- * there subscribers need only for testing
+ * That file returning subscribers, provided in scheme below.
+ *
+ * 'subscriber_name' => [
+ *      'event' => Event::Event,
+ *      'class' => Class::class
+ * ]
+ *
+ * subscriber_name represents subscriber unique identifier.
+ * event represents a event number, Event numbers are arranged as constants in Event class.
+ * class represents a subscriber class, must be inherited by AbstractSubscriber.
+ *
+ * Some events support multiple subscribers. They executes synchronously until a response is returned.
  */
 return [
     'request_subscriber' => [

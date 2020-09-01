@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * That file returning paths to application php scripts.
+ * They are loaded consistently, in accordance with returned array.
+ */
 return [
     'Framework/*.php',
     'Framework/Env/*.php',

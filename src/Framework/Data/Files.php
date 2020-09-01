@@ -6,14 +6,22 @@ namespace Framework\Data;
 
 use Framework\File;
 
+/**
+ * Class Files represents implementation of files bag.
+ * @package Framework\Data
+ */
 class Files implements FileBag
 {
+    /**
+     * Files constructor.
+     */
     public function __construct()
     {
         $this->array = [];
     }
 
     /**
+     * Contains array with all files.
      * @var array $array
      */
     private array $array;
@@ -59,6 +67,7 @@ class Files implements FileBag
     }
 
     /**
+     * Shortcut for creating file bag from globals.
      * @return Files
      */
     public static function createFromGlobals(): Files

@@ -3,20 +3,28 @@
 
 namespace Framework\Routing;
 
-
+/**
+ * Class Tag represents tag in route path
+ * @package Framework\Routing
+ */
 class Tag
 {
+    /**
+     * Tag constructor.
+     */
     public function __construct()
     {
         $this->value = null;
     }
 
     /**
+     * Contains tag name.
      * @var string $name
      */
     private string $name;
 
     /**
+     * Returns tag name.
      * @return string
      */
     public function getName(): string
@@ -25,6 +33,7 @@ class Tag
     }
 
     /**
+     * Sets tag name.
      * @param string $name
      */
     public function setName(string $name): void
@@ -33,11 +42,13 @@ class Tag
     }
 
     /**
+     * Indicates when value can be null.
      * @var bool $nullable
      */
     private bool $nullable;
 
     /**
+     * Returns true when value can be null.
      * @return bool
      */
     public function isNullable(): bool
@@ -46,6 +57,7 @@ class Tag
     }
 
     /**
+     * Sets value of nullable.
      * @param bool $nullable
      */
     public function setNullable(bool $nullable): void
@@ -54,11 +66,13 @@ class Tag
     }
 
     /**
+     * Contains step number.
      * @var int $step
      */
     private int $step;
 
     /**
+     * Returns step.
      * @return int
      */
     public function getStep(): int
@@ -67,6 +81,7 @@ class Tag
     }
 
     /**
+     * Sets step.
      * @param int $step
      */
     public function setStep(int $step): void
@@ -75,11 +90,13 @@ class Tag
     }
 
     /**
+     * Contains value type.
      * @var string $type
      */
     private string $type;
 
     /**
+     * Returns value type.
      * @return string
      */
     public function getType(): string
@@ -88,6 +105,7 @@ class Tag
     }
 
     /**
+     * Sets value type.
      * @param string $type
      */
     public function setType(string $type): void
@@ -96,11 +114,13 @@ class Tag
     }
 
     /**
+     * Contains value.
      * @var mixed $value
      */
     private $value;
 
     /**
+     * Returns value.
      * @return mixed
      */
     public function getValue()
@@ -109,6 +129,7 @@ class Tag
     }
 
     /**
+     * Sets value.
      * @param mixed $value
      */
     public function setValue($value): void
@@ -116,6 +137,12 @@ class Tag
         $this->value = $value;
     }
 
+    /**
+     * Shortcut for creating tag from array.
+     * @param string $name
+     * @param array $array
+     * @return Tag
+     */
     public static function fromArray(string $name, array $array): Tag
     {
         $tag = new Tag();

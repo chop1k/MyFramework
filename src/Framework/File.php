@@ -3,15 +3,20 @@
 
 namespace Framework;
 
-
+/**
+ * Class File represents file.
+ * @package Framework
+ */
 class File
 {
     /**
+     * Contains file name.
      * @var string $name
      */
-    protected string $name;
+    private string $name;
 
     /**
+     * Returns file name.
      * @return string
      */
     public function getName(): string
@@ -20,6 +25,7 @@ class File
     }
 
     /**
+     * Sets file name.
      * @param string $name
      */
     public function setName(string $name): void
@@ -28,11 +34,13 @@ class File
     }
 
     /**
+     * Contains file type.
      * @var string $type
      */
-    protected string $type;
+    private string $type;
 
     /**
+     * Returns file type.
      * @return string
      */
     public function getType(): string
@@ -41,6 +49,7 @@ class File
     }
 
     /**
+     * Sets file type.
      * @param string $type
      */
     public function setType(string $type): void
@@ -48,9 +57,14 @@ class File
         $this->type = $type;
     }
 
-    protected string $path;
+    /**
+     * Contains path to temporary file.
+     * @var string $path
+     */
+    private string $path;
 
     /**
+     * Return path to temporary file.
      * @return string
      */
     public function getPath(): string
@@ -59,6 +73,7 @@ class File
     }
 
     /**
+     * Sets path to temporary file.
      * @param string $path
      */
     public function setPath(string $path): void
@@ -66,9 +81,14 @@ class File
         $this->path = $path;
     }
 
-    protected int $size;
+    /**
+     * Contains size of file.
+     * @var int $size
+     */
+    private int $size;
 
     /**
+     * Returns size of file.
      * @return int
      */
     public function getSize(): int
@@ -77,6 +97,7 @@ class File
     }
 
     /**
+     * Sets size of file.
      * @param int $size
      */
     public function setSize(int $size): void
@@ -85,7 +106,8 @@ class File
     }
 
     /**
-     * @param int $size
+     * Reads file and returns result.
+     * @param int $size If size < 0 then file size will be used.
      * @return false|string
      */
     public function getContent(int $size = -1)

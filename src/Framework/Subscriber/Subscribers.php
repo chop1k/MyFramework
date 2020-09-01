@@ -3,15 +3,20 @@
 
 namespace Framework\Subscriber;
 
-
+/**
+ * Class Subscribers that needed for easy search subscribers by event.
+ * @package Framework\Subscriber
+ */
 class Subscribers
 {
     /**
+     * Contains array of Request event subscribers.
      * @var array $requestSubscribers
      */
     private array $requestSubscribers;
 
     /**
+     * Returns array of Request event subscriber.
      * @return array
      */
     public function getRequestSubscribers(): array
@@ -20,6 +25,7 @@ class Subscribers
     }
 
     /**
+     * Addes subscriber to array.
      * @param Subscriber $subscriber
      */
     public function addRequestSubscriber(Subscriber $subscriber): void
@@ -28,11 +34,13 @@ class Subscribers
     }
 
     /**
+     * Contains Exception event subscriber or null.
      * @var Subscriber|null $exceptionSubscriber
      */
     private ?Subscriber $exceptionSubscriber;
 
     /**
+     * Return Exception event subscriber if exists.
      * @return Subscriber|null
      */
     public function getExceptionSubscriber(): ?Subscriber
@@ -41,6 +49,7 @@ class Subscribers
     }
 
     /**
+     * Sets Exception event subscriber.
      * @param Subscriber|null $exceptionSubscriber
      */
     public function setExceptionSubscriber(?Subscriber $exceptionSubscriber): void
@@ -49,11 +58,13 @@ class Subscribers
     }
 
     /**
+     * Contains NotFound event subscriber or null.
      * @var Subscriber|null $notFoundSubscriber
      */
     private ?Subscriber $notFoundSubscriber;
 
     /**
+     * Returns NotFound event subscriber if exists.
      * @return Subscriber|null
      */
     public function getNotFoundSubscriber(): ?Subscriber
@@ -62,6 +73,7 @@ class Subscribers
     }
 
     /**
+     * Sets NotFound event subscriber.
      * @param Subscriber|null $notFoundSubscriber
      */
     public function setNotFoundSubscriber(?Subscriber $notFoundSubscriber): void
@@ -70,11 +82,13 @@ class Subscribers
     }
 
     /**
+     * Contains MethodNotAllowed event subscriber or null.
      * @var Subscriber|null $methodNotAllowedSubscriber
      */
     private ?Subscriber $methodNotAllowedSubscriber;
 
     /**
+     * Returns MethodNotAllowed event subscriber if exists.
      * @return Subscriber|null
      */
     public function getMethodNotAllowedSubscriber(): ?Subscriber
@@ -83,6 +97,7 @@ class Subscribers
     }
 
     /**
+     * Sets MethodNotAllowed event subscriber.
      * @param Subscriber|null $methodNotAllowedSubscriber
      */
     public function setMethodNotAllowedSubscriber(?Subscriber $methodNotAllowedSubscriber): void
@@ -91,11 +106,13 @@ class Subscribers
     }
 
     /**
+     * Contains array of RouteFound event subscribers.
      * @var array $routeFoundSubscribers
      */
     private array $routeFoundSubscribers;
 
     /**
+     * Returns array of RouteFound event subscribers.
      * @return array
      */
     public function getRouteFoundSubscribers(): array
@@ -104,6 +121,7 @@ class Subscribers
     }
 
     /**
+     * Adds subscriber to array of RouteFound subscribers.
      * @param Subscriber $subscriber
      */
     public function addRouteFoundSubscriber(Subscriber $subscriber): void
@@ -112,11 +130,13 @@ class Subscribers
     }
 
     /**
+     * Contains ControllerNotFound event subscriber or null.
      * @var Subscriber|null $controllerNotFoundSubscriber
      */
     private ?Subscriber $controllerNotFoundSubscriber;
 
     /**
+     * Return ControllerNotFound event subscriber if exists.
      * @return Subscriber|null
      */
     public function getControllerNotFoundSubscriber(): ?Subscriber
@@ -125,6 +145,7 @@ class Subscribers
     }
 
     /**
+     * Sets ControllerNotFound event subscriber.
      * @param Subscriber|null $controllerNotFoundSubscriber
      */
     public function setControllerNotFoundSubscriber(?Subscriber $controllerNotFoundSubscriber): void
@@ -133,11 +154,13 @@ class Subscribers
     }
 
     /**
+     * Contains array of Response event subscribers.
      * @var array $responseSubscribers
      */
     private array $responseSubscribers;
 
     /**
+     * Returns array of Response event subscribers.
      * @return array
      */
     public function getResponseSubscribers(): array
@@ -146,6 +169,7 @@ class Subscribers
     }
 
     /**
+     * Adds subscriber to array of Response event subscribers.
      * @param Subscriber $subscriber
      */
     public function addResponseSubscribers(Subscriber $subscriber): void
@@ -153,6 +177,9 @@ class Subscribers
         $this->responseSubscribers[] = $subscriber;
     }
 
+    /**
+     * Subscribers constructor.
+     */
     public function __construct()
     {
         $this->requestSubscribers = [];
@@ -164,6 +191,11 @@ class Subscribers
         $this->responseSubscribers = [];
     }
 
+    /**
+     * Shortcut for creating instance by array.
+     * @param array $array
+     * @return Subscribers
+     */
     public static function fromArray(array $array): Subscribers
     {
         $subscribers = new Subscribers();

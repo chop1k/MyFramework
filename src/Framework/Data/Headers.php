@@ -6,8 +6,15 @@ namespace Framework\Data;
 
 use Framework\Header;
 
+/**
+ * Class Headers represents implementation of header bag.
+ * @package Framework\Data
+ */
 class Headers implements HeaderBag
 {
+    /**
+     * Headers constructor.
+     */
     public function __construct()
     {
         $this->array = [];
@@ -74,6 +81,7 @@ class Headers implements HeaderBag
     }
 
     /**
+     * Shortcut for creating headers from globals.
      * @return Headers
      */
     public static function createFromGlobals(): Headers
@@ -93,6 +101,11 @@ class Headers implements HeaderBag
         return $headers;
     }
 
+    /**
+     * Shortcut for creating headers from array.
+     * @param array $array
+     * @return Headers
+     */
     public static function fromArray(array $array): Headers
     {
         $headers = new Headers();

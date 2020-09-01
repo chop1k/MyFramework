@@ -19,6 +19,10 @@ use Framework\Subscriber\Event;
 use Framework\Subscriber\Subscriber;
 use Framework\Subscriber\Subscribers;
 
+/**
+ * Application class that represents request handling
+ * @package Framework\App
+ */
 class Application
 {
     /**
@@ -40,27 +44,6 @@ class Application
     public function setSubscribers(Subscribers $subscribers): void
     {
         $this->subscribers = $subscribers;
-    }
-
-    /**
-     * @var Controller $controller
-     */
-    private Controller $controller;
-
-    /**
-     * @return Controller
-     */
-    public function getController(): Controller
-    {
-        return $this->controller;
-    }
-
-    /**
-     * @param Controller $controller
-     */
-    public function setController(Controller $controller): void
-    {
-        $this->controller = $controller;
     }
 
     /**
@@ -147,6 +130,9 @@ class Application
         $this->response = $response;
     }
 
+    /**
+     * Application constructor which nullifies some properties
+     */
     public function __construct()
     {
         $this->setHandlerKit(new HandlerKit());
@@ -155,15 +141,27 @@ class Application
         $this->setResponse(null);
     }
 
+    /**
+     * Function for invoke events and get result
+     * @param int $event
+     * @return Response|null
+     * @throws InvalidSubscriberException
+     */
     public function invoke(int $event): ?Response
     {
         $event = new Event($event);
 
+        /**
+         * Gets method
+         */
         if ($event->isMultiple())
             $getMethod = 'get' . $event->getName() . 'Subscribers';
         else
             $getMethod = 'get' . $event->getName() . 'Subscriber';
 
+        /**
+         * Executes method and gets list of subscribers or subscriber
+         */
         $subscribers = $this->getSubscribers()->$getMethod();
 
         if (is_array($subscribers))
@@ -172,32 +170,55 @@ class Application
 
             foreach ($subscribers as $subscriber)
             {
+                /**
+                 * Invoke subscriber
+                 */
                 $response = $this->invokeOne($subscriber, $event);
 
                 if (!is_null($response))
                     return $response;
             }
 
+            /**
+             * If subscriber return response then return response
+             */
             return $response;
         }
 
+        /**
+         * If subscriber is single then invoke him
+         */
         if ($subscribers instanceof Subscriber)
         {
             return $this->invokeOne($subscribers, $event);
         }
 
+        /**
+         * If response not returned then gets default response, related with event
+         */
         if (!$event->isNullable())
             return Response::getFromStatus($event->getStatus());
 
+        /**
+         * If event is Response then return response, which was got earlier
+         */
         if ($event === Event::Response)
             return $this->getResponse();
 
         return null;
     }
 
+    /**
+     * Private function for invoke one subscriber
+     * @param Subscriber $subscriber
+     * @param Event $event
+     * @return Response|null
+     * @throws InvalidSubscriberException
+     */
     private function invokeOne(Subscriber $subscriber, Event $event): ?Response
     {
         /**
+         * Gets subscriber instance
          * @var AbstractSubscriber $instance
          */
         $instance = $subscriber->getInstance();
@@ -205,24 +226,41 @@ class Application
         if (!($instance instanceof AbstractSubscriber) || !is_subclass_of($instance, $event->getInterface()))
             throw new InvalidSubscriberException('subscriber must be instance of ' . AbstractSubscriber::class . ', got ' . gettype($instance));
 
-
+        /**
+         * Sets instance properties
+         */
         $instance->request = $this->handlerKit->request;
         $instance->config = $this->handlerKit->config;
         $instance->exception = $this->getException();
         $instance->route = $this->getRoute();
         $instance->response = $this->getResponse();
 
+        /**
+         * Gets method for execute
+         */
         $method = 'on' . $event->getName();
 
         return $instance->$method();
     }
 
+    /**
+     * Function that start application
+     * @param ApplicationConfig $config
+     * @return Response
+     * @throws InvalidSubscriberException
+     */
     public static function start(ApplicationConfig $config): Response
     {
         $app = new Application();
 
+        /**
+         * Get subscribers
+         */
         $app->setSubscribers(Subscribers::fromArray(require_once $config->getSubscribersPath()));
 
+        /**
+         * Create request from globals
+         */
         $request = Request::createFromGlobals();
 
         $kit = new HandlerKit();
@@ -232,6 +270,12 @@ class Application
 
         $app->setHandlerKit($kit);
 
+        /**
+         * Local function that need for exclude code copying
+         * @param Exception $exception
+         * @param Application $app
+         * @return Response
+         */
         $invokeException = function (Exception $exception, Application $app): Response
         {
             $app->setException($exception);
@@ -244,6 +288,12 @@ class Application
             return $response;
         };
 
+        /**
+         * Local function that need for exclude code copying
+         * @param Response $response
+         * @param Application $app
+         * @return Response
+         */
         $invokeResponse = function (Response $response, Application $app): Response
         {
             $app->setResponse($response);
@@ -253,35 +303,73 @@ class Application
             return $response;
         };
 
+        /**
+         * Local function that need for exclude code copying
+         * @param bool $before
+         * @param array $middleware
+         * @param Controller $controller
+         * @param Application $app
+         * @return bool|Response|mixed|null
+         */
         $invokeMiddleware = function (bool $before, array $middleware, Controller $controller, Application $app)
         {
+            /**
+             * Gets list of middleware
+             */
             $list = $before ? $controller->getBeforeMiddleware() : $controller->getAfterMiddleware();
 
             $response = null;
 
             foreach ($list as $name)
             {
+                /**
+                 * If middleware list not contains middleware which indicates in controller then throw exception
+                 */
                 if (!isset($middleware[$name]))
                     throw new Exception("undefined middleware with name $name");
 
+                /**
+                 * Structure middleware
+                 */
                 $middlewareInstance = Middleware::fromArray($name, $middleware[$name]);
 
+                /**
+                 * Gets middleware instance
+                 */
                 $instance = $middlewareInstance->getInstance();
 
+                /**
+                 * Type checking
+                 */
                 if (!($instance instanceof AbstractMiddleware))
                     throw new Exception('middleware instance must be instance of ' . AbstractMiddleware::class . ', got ' . gettype($instance));
 
+                /**
+                 * Sets instance properties
+                 */
                 $instance->response = $app->getResponse();
                 $instance->request = $app->getHandlerKit()->request;
                 $instance->config = $app->getHandlerKit()->config;
 
+                /**
+                 * Gets method for execute
+                 */
                 $method = $middlewareInstance->getMethod();
 
+                /**
+                 * Execute method
+                 */
                 $response = $instance->$method();
 
+                /**
+                 * If returns type is bool then break loop and return response
+                 */
                 if (is_bool($response))
                     break;
 
+                /**
+                 * Is response is response then return response
+                 */
                 if ($response instanceof Response)
                     break;
             }
@@ -289,6 +377,9 @@ class Application
             return $response;
         };
 
+        /**
+         * Invoke Request event
+         */
         try {
             $response = $app->invoke(Event::Request);
 
@@ -296,6 +387,9 @@ class Application
                 return $invokeResponse($response, $app);
 
         } catch (Exception $exception) {
+            /**
+             * If error then invoke Exception event and invoke Response event and return response
+             */
             return $invokeResponse($invokeException($exception, $app), $app);
         }
 
@@ -303,45 +397,71 @@ class Application
 
         $app->setRoute($route);
 
+        /**
+         * Invoke NotFound event if route not found
+         */
         if (is_null($route)) {
             try {
                 return $invokeResponse($app->invoke(Event::NotFound), $app);
             } catch (Exception $exception) {
+                /**
+                 * If error then invoke Exception event and invoke Response event and return response
+                 */
                 return $invokeResponse($invokeException($exception, $app), $app);
             }
         }
 
+        /**
+         * Invoke MethodNotAllowed event if method not allowed
+         */
         if (!in_array($request->getMethod(), $route->getMethods())) {
             try {
                 return $invokeResponse($app->invoke(Event::MethodNotAllowed), $app);
             } catch (Exception $exception) {
+                /**
+                 * If error then invoke Exception event and invoke Response event and return response
+                 */
                 return $invokeResponse($invokeException($exception, $app), $app);
             }
         }
 
+        /**
+         * Gets controllers list
+         */
         $controllers = require_once $config->getControllersPath();
 
+        /**
+         * Check if controller defined, if no then invoke ControllerNotFound event
+         */
         if (!isset($controllers[$route->getController()])) {
             try {
-                return $invokeResponse($app->invoke(Event::ControllerNotFound), $app);
-            } catch (Exception $exception) {
-                return $invokeResponse($invokeException($exception, $app), $app);
-            }
-        }
+                $response = $app->invoke(Event::ControllerNotFound);
 
-        if (!isset($controllers[$route->getController()]))
-        {
-            try {
+                if ($response instanceof Response)
+                    return $invokeResponse($response, $app);
+
                 throw new Exception("controller with name {$route->getController()} not defined in {$config->getControllersPath()}");
             } catch (Exception $exception) {
+                /**
+                 * If error then invoke Exception event and invoke Response event and return response
+                 */
                 return $invokeResponse($invokeException($exception, $app), $app);
             }
         }
 
+        /**
+         * Gets controller from array
+         */
         $controller = Controller::fromArray($route->getController(), $controllers[$route->getController()]);
 
+        /**
+         * Gets middleware list
+         */
         $middleware = require_once $config->getMiddlewarePath();
 
+        /**
+         * Invoke before middleware
+         */
         try {
             $response = $invokeMiddleware(true, $middleware, $controller, $app);
 
@@ -349,31 +469,62 @@ class Application
                 return $invokeResponse($response, $app);
         } catch (Exception $exception)
         {
+            /**
+             * If error then invoke Exception event and invoke Response event and return response
+             */
             return $invokeResponse($invokeException($exception, $app), $app);
         }
 
-        $app->setController($controller);
-
         try {
             /**
+             * Gets instance of controller
              * @var HandlerKit $instance
              */
             $instance = $controller->getInstance($kit);
 
+            /**
+             * Gets method for execute
+             */
             $method = $controller->getMethod();
 
-            $response = $instance->$method();
+            try {
+                /**
+                 * Execute method and get response
+                 */
+                $response = $instance->$method();
+            } catch (Exception $exception)
+            {
+                /**
+                 * If exceptions aren't allowed then throw exception.
+                 */
+                if (!$controller->isExceptions())
+                    throw $exception;
+
+                /**
+                 * Otherwise invoke Exception event and execute middleware.
+                 */
+                $response = $invokeException($exception, $app);
+            }
 
             if (!($response instanceof Response))
                 throw new InvalidResponseException('response must be instance of ' . Response::class . ', got ' . gettype($response));
 
+            /**
+             * Invoke after middleware
+             */
             $middlewareResponse = $invokeMiddleware(false, $middleware, $controller, $app);
 
+            /**
+             * If middleware returned response then invoke Response event and return response
+             */
             if ($middlewareResponse instanceof Response)
                 return $invokeResponse($middlewareResponse, $app);
 
             return $invokeResponse($response, $app);
         } catch (Exception $exception) {
+            /**
+             * If error then invoke Exception event and invoke Response event and return response
+             */
             return $invokeResponse($invokeException($exception, $app), $app);
         }
     }

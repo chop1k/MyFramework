@@ -3,14 +3,24 @@
 
 namespace Framework\Data;
 
-
+/**
+ * Class Params represents bag, which contains params, transferred by routes or middleware.
+ * @package Framework\Data
+ */
 class Params implements Bag
 {
+    /**
+     * Params constructor.
+     */
     public function __construct()
     {
         $this->array = [];
     }
 
+    /**
+     * Contains array of params.
+     * @var array $array
+     */
     private array $array;
 
     /**

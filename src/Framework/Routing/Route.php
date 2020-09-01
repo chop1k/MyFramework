@@ -3,15 +3,20 @@
 
 namespace Framework\Routing;
 
-
+/**
+ * Class Route represents route.
+ * @package Framework\Routing
+ */
 class Route
 {
     /**
+     * Contains name of route.
      * @var string $name
      */
-    protected string $name;
+    private string $name;
 
     /**
+     * Returns name of route.
      * @return string
      */
     public function getName(): string
@@ -20,6 +25,7 @@ class Route
     }
 
     /**
+     * Sets name of route.
      * @param string $name
      */
     public function setName(string $name): void
@@ -28,11 +34,13 @@ class Route
     }
 
     /**
+     * Contains path of route.
      * @var string $path
      */
-    protected string $path;
+    private string $path;
 
     /**
+     * Returns path of route.
      * @return string
      */
     public function getPath(): string
@@ -41,6 +49,7 @@ class Route
     }
 
     /**
+     * Sets path of route.
      * @param string $path
      */
     public function setPath(string $path): void
@@ -49,11 +58,13 @@ class Route
     }
 
     /**
+     * Contains controller name.
      * @var string $controller
      */
-    protected string $controller;
+    private string $controller;
 
     /**
+     * Returns controller name.
      * @return string
      */
     public function getController(): string
@@ -62,6 +73,7 @@ class Route
     }
 
     /**
+     * Sets controller name.
      * @param string $controller
      */
     public function setController(string $controller): void
@@ -70,11 +82,13 @@ class Route
     }
 
     /**
+     * Contains array of supported methods.
      * @var array $methods
      */
-    protected array $methods;
+    private array $methods;
 
     /**
+     * Returns array of supported methods.
      * @return array
      */
     public function getMethods(): array
@@ -83,6 +97,7 @@ class Route
     }
 
     /**
+     * Sets array of supported methods.
      * @param array $methods
      */
     public function setMethods(array $methods): void
@@ -91,11 +106,13 @@ class Route
     }
 
     /**
+     * Contains array of tags.
      * @var array $tags
      */
-    protected array $tags;
+    private array $tags;
 
     /**
+     * Returns array of tags.
      * @return array
      */
     public function getTags(): array
@@ -104,6 +121,7 @@ class Route
     }
 
     /**
+     * Sets array of tags.
      * @param array $tags
      */
     public function setTags(array $tags): void
@@ -111,12 +129,17 @@ class Route
         $this->tags = $tags;
     }
 
+    /**
+     * Checks if given path matches route tags.
+     * @param array $explodedPath
+     * @return bool
+     */
     public function isCorrespondTags(array $explodedPath): bool
     {
         /**
          * @var Tag $tag
          */
-        foreach ($this->tags as $tag)
+        foreach ($this->getTags() as $tag)
         {
             if ($tag->getType() === 'integer' && !is_numeric($explodedPath[$tag->getStep()]))
                 return false;
@@ -125,12 +148,17 @@ class Route
         return true;
     }
 
+    /**
+     * Replaces path values with tags names.
+     * @param array $explodedPath
+     * @return string
+     */
     public function replacePathValuesWithNames(array $explodedPath): string
     {
         /**
          * @var Tag $tag
          */
-        foreach ($this->tags as $tag)
+        foreach ($this->getTags() as $tag)
         {
             $explodedPath[$tag->getStep()] = ":{$tag->getName()}";
         }
@@ -138,17 +166,27 @@ class Route
         return implode('/', $explodedPath);
     }
 
+    /**
+     * Sets tags values to path values.
+     * @param array $explodedPath
+     */
     public function computeTagsValues(array $explodedPath): void
     {
         /**
          * @var Tag $tag
          */
-        foreach ($this->tags as $tag)
+        foreach ($this->getTags() as $tag)
         {
             $tag->setValue($explodedPath[$tag->getStep()]);
         }
     }
 
+    /**
+     * Shortcut to creating route from config.
+     * @param string $name
+     * @param array $array
+     * @return Route
+     */
     public static function fromArray(string $name, array $array): Route
     {
         $route = new Route();

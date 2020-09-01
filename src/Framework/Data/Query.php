@@ -3,15 +3,22 @@
 
 namespace Framework\Data;
 
-
+/**
+ * Class Query represents bag of values from request path query.
+ * @package Framework\Data
+ */
 class Query implements Bag
 {
+    /**
+     * Query constructor.
+     */
     public function __construct()
     {
         $this->array = [];
     }
 
     /**
+     * Contains array of values.
      * @var array $array
      */
     private array $array;
@@ -68,6 +75,7 @@ class Query implements Bag
     }
 
     /**
+     * Shortcut for creating query from globals.
      * @return Query
      */
     public static function createFromGlobals(): Query

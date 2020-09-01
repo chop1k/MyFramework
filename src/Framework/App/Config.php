@@ -3,7 +3,10 @@
 
 namespace Framework\App;
 
-
+/**
+ * Class Config represents config with any values.
+ * @package Framework\App
+ */
 class Config
 {
     public function __construct()
@@ -11,9 +14,14 @@ class Config
         $this->array = [];
     }
 
+    /**
+     * Contains config data.
+     * @var array $array
+     */
     private array $array;
 
     /**
+     * Returns number of pairs key-value which are contained in the config.
      * @return int
      */
     public function count(): int
@@ -22,6 +30,7 @@ class Config
     }
 
     /**
+     * Checks if config contains key.
      * @param string $key
      * @return bool
      */
@@ -31,6 +40,7 @@ class Config
     }
 
     /**
+     * Gets value from config.
      * @param string $key
      * @return string
      */
@@ -40,6 +50,7 @@ class Config
     }
 
     /**
+     * Sets value to config.
      * @param string $key
      * @param mixed $value
      */
@@ -49,6 +60,7 @@ class Config
     }
 
     /**
+     * Returns raw config.
      * @return array
      */
     public function all(): array
@@ -57,6 +69,7 @@ class Config
     }
 
     /**
+     * Replaces values in given array.
      * @param array $array
      * @return void
      */
@@ -68,14 +81,16 @@ class Config
         }
     }
 
+    /**
+     * Shortcut.
+     * @param array $array
+     * @return Config
+     */
     public static function fromArray(array $array): Config
     {
         $config = new Config();
 
-        foreach ($array as $name => $value)
-        {
-            $config->set($name, $value);
-        }
+        $config->replace($array);
 
         return $config;
     }

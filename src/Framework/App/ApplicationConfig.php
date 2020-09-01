@@ -3,36 +3,20 @@
 
 namespace Framework\App;
 
-
+/**
+ * Class ApplicationConfig, contains paths to application config files
+ * @package Framework\App
+ */
 class ApplicationConfig
 {
     /**
-     * @var string $rootPath
-     */
-    private string $rootPath;
-
-    /**
-     * @return string
-     */
-    public function getRootPath(): string
-    {
-        return $this->rootPath;
-    }
-
-    /**
-     * @param string $rootPath
-     */
-    public function setRootPath(string $rootPath): void
-    {
-        $this->rootPath = $rootPath;
-    }
-
-    /**
+     * Contains path to controllers config file
      * @var string $controllersPath
      */
     private string $controllersPath;
 
     /**
+     * Gets path to controllers file config
      * @return string
      */
     public function getControllersPath(): string
@@ -41,6 +25,7 @@ class ApplicationConfig
     }
 
     /**
+     * Sets path to controllers config
      * @param string $controllersPath
      */
     public function setControllersPath(string $controllersPath): void
@@ -48,9 +33,14 @@ class ApplicationConfig
         $this->controllersPath = $controllersPath;
     }
 
+    /**
+     * Contains path to models config file
+     * @var string $modelsPath
+     */
     private string $modelsPath;
 
     /**
+     * Gets path to models config
      * @return string
      */
     public function getModelsPath(): string
@@ -59,6 +49,7 @@ class ApplicationConfig
     }
 
     /**
+     * Sets path to models config
      * @param string $modelsPath
      */
     public function setModelsPath(string $modelsPath): void
@@ -66,9 +57,14 @@ class ApplicationConfig
         $this->modelsPath = $modelsPath;
     }
 
+    /**
+     * Contains path to subscribers config file
+     * @var string $subscribersPath
+     */
     private string $subscribersPath;
 
     /**
+     * Gets path to subscribers config file
      * @return string
      */
     public function getSubscribersPath(): string
@@ -77,6 +73,7 @@ class ApplicationConfig
     }
 
     /**
+     * Sets path to subscribers config file
      * @param string $subscribersPath
      */
     public function setSubscribersPath(string $subscribersPath): void
@@ -85,11 +82,13 @@ class ApplicationConfig
     }
 
     /**
+     * Contains path to routes config file
      * @var string $routesPath
      */
     private string $routesPath;
 
     /**
+     * Gets path to routes config file
      * @return string
      */
     public function getRoutesPath(): string
@@ -98,6 +97,7 @@ class ApplicationConfig
     }
 
     /**
+     * Sets path to routes config file
      * @param string $routesPath
      */
     public function setRoutesPath(string $routesPath): void
@@ -106,11 +106,13 @@ class ApplicationConfig
     }
 
     /**
+     * Contains path to framework config file
      * @var string $frameworkPath
      */
     private string $frameworkPath;
 
     /**
+     * Gets path to framework config file
      * @return string
      */
     public function getFrameworkPath(): string
@@ -119,6 +121,7 @@ class ApplicationConfig
     }
 
     /**
+     * Sets path to framework config file
      * @param string $frameworkPath
      */
     public function setFrameworkPath(string $frameworkPath): void
@@ -127,11 +130,13 @@ class ApplicationConfig
     }
 
     /**
+     * Contains path to middleware config file
      * @var string $middlewarePath
      */
     private string $middlewarePath;
 
     /**
+     * Gets path to middleware config file
      * @return string
      */
     public function getMiddlewarePath(): string
@@ -140,6 +145,7 @@ class ApplicationConfig
     }
 
     /**
+     * Sets path to middleware config file
      * @param string $middlewarePath
      */
     public function setMiddlewarePath(string $middlewarePath): void
