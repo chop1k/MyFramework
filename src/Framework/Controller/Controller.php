@@ -186,6 +186,8 @@ class Controller
 
         $instance->request = $handlerKit->request;
         $instance->config = $handlerKit->config;
+        $instance->query = $handlerKit->query;
+        $instance->manager = $handlerKit->manager;
 
         return $instance;
     }

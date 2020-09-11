@@ -12,6 +12,9 @@ use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Middleware\AbstractMiddleware;
 use Framework\Middleware\Middleware;
+use Framework\Model\DatabaseProvider;
+use Framework\Model\ModelsManager;
+use Framework\Model\QueryProvider;
 use Framework\Routing\Route;
 use Framework\Routing\Routes;
 use Framework\Subscriber\AbstractSubscriber;
@@ -234,6 +237,8 @@ class Application
         $instance->exception = $this->getException();
         $instance->route = $this->getRoute();
         $instance->response = $this->getResponse();
+        $instance->manager = $this->handlerKit->manager;
+        $instance->query = $this->handlerKit->query;
 
         /**
          * Gets method for execute
@@ -244,7 +249,24 @@ class Application
     }
 
     /**
-     * Function that start application
+     * Liberates resources which used by application.
+     */
+    public function free(): void
+    {
+        /**
+         * @var DatabaseProvider $provider
+         */
+        foreach ($this->handlerKit->manager->getProviders() as $provider)
+        {
+            if ($provider->isConnected())
+            {
+                $provider->close();
+            }
+        }
+    }
+
+    /**
+     * Function which start application
      * @param ApplicationConfig $config
      * @return Response
      * @throws InvalidSubscriberException
@@ -267,6 +289,8 @@ class Application
 
         $kit->request = $request;
         $kit->config = Config::fromArray(require_once $config->getFrameworkPath());
+        $kit->query = QueryProvider::fromConfig(require_once $config->getQueriesPath());
+        $kit->manager = ModelsManager::create(require_once $config->getDatabasesPath());
 
         $app->setHandlerKit($kit);
 
@@ -281,6 +305,8 @@ class Application
             $app->setException($exception);
 
             $response = $app->invoke(Event::Exception);
+
+            $app->free();
 
             if (is_null($response))
                 throw $exception;
@@ -299,6 +325,8 @@ class Application
             $app->setResponse($response);
 
             $app->invoke(Event::Response);
+
+            $app->free();
 
             return $response;
         };
@@ -350,6 +378,8 @@ class Application
                 $instance->response = $app->getResponse();
                 $instance->request = $app->getHandlerKit()->request;
                 $instance->config = $app->getHandlerKit()->config;
+                $instance->manager = $app->getHandlerKit()->manager;
+                $instance->query = $app->getHandlerKit()->query;
 
                 /**
                  * Gets method for execute

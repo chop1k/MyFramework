@@ -7,6 +7,8 @@ namespace Framework\Data;
 use Framework\App\Config;
 use Framework\Http\Request;
 use Framework\Http\Response;
+use Framework\Model\ModelsManager;
+use Framework\Model\QueryProvider;
 
 /**
  * Class HandlerKit represents kit of data to handling in special classes.
@@ -31,4 +33,16 @@ class HandlerKit
      * @var Response|null $response
      */
     public ?Response $response;
+
+    /**
+     * Responsible for interactions with models.
+     * @var ModelsManager $modelsManager
+     */
+    public ModelsManager $manager;
+
+    /**
+     * 
+     * @var QueryProvider $queryProvider
+     */
+    public QueryProvider $query;
 }

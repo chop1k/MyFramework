@@ -58,6 +58,54 @@ class ApplicationConfig
     }
 
     /**
+     * Contains path to queries config.
+     * @var string $queriesPath
+     */
+    private string $queriesPath;
+
+    /**
+     * Returns path to queries config.
+     * @return string
+     */
+    public function getQueriesPath(): string
+    {
+        return $this->queriesPath;
+    }
+
+    /**
+     * Sets path to queries config.
+     * @param string $queriesPath
+     */
+    public function setQueriesPath(string $queriesPath): void
+    {
+        $this->queriesPath = $queriesPath;
+    }
+
+    /**
+     * Contains path to databases config.
+     * @var string $databasesPath
+     */
+    private string $databasesPath;
+
+    /**
+     * Returns path to databases config.
+     * @return string
+     */
+    public function getDatabasesPath(): string
+    {
+        return $this->databasesPath;
+    }
+
+    /**
+     * Sets path to databases config.
+     * @param string $databasesPath
+     */
+    public function setDatabasesPath(string $databasesPath): void
+    {
+        $this->databasesPath = $databasesPath;
+    }
+
+    /**
      * Contains path to subscribers config file
      * @var string $subscribersPath
      */

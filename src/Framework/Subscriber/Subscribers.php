@@ -25,7 +25,7 @@ class Subscribers
     }
 
     /**
-     * Addes subscriber to array.
+     * Address subscriber to array.
      * @param Subscriber $subscriber
      */
     public function addRequestSubscriber(Subscriber $subscriber): void

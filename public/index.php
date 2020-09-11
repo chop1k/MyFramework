@@ -27,6 +27,9 @@ $config->setControllersPath(dirname(__DIR__).'/config/controllers.php');
 $config->setSubscribersPath(dirname(__DIR__).'/config/subscribers.php');
 $config->setFrameworkPath(dirname(__DIR__).'/config/framework.php');
 $config->setMiddlewarePath(dirname(__DIR__).'/config/middleware.php');
+$config->setQueriesPath(dirname(__DIR__).'/config/queries.php');
+$config->setDatabasesPath(dirname(__DIR__).'/config/databases.php');
+$config->setModelsPath(dirname(__DIR__).'/config/models.php');
 
 try {
     /**

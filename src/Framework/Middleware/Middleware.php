@@ -92,6 +92,12 @@ class Middleware
         return new $class();
     }
 
+    /**
+     * Shortcut for creating middleware by array from config.
+     * @param string $name
+     * @param array $array
+     * @return Middleware
+     */
     public static function fromArray(string $name, array $array): Middleware
     {
         $middleware = new Middleware();
