@@ -200,4 +200,28 @@ class ApplicationConfig
     {
         $this->middlewarePath = $middlewarePath;
     }
+
+    /**
+     * Contains path to cache config.
+     * @var string $cachePath
+     */
+    private string $cachePath;
+
+    /**
+     * Returns cache config path.
+     * @return string
+     */
+    public function getCachePath(): string
+    {
+        return $this->cachePath;
+    }
+
+    /**
+     * Sets cache config path.
+     * @param string $cachePath
+     */
+    public function setCachePath(string $cachePath): void
+    {
+        $this->cachePath = $cachePath;
+    }
 }

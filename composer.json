@@ -3,6 +3,8 @@
         "ext-json": "^7.4",
       "ext-fileinfo": "*",
         "ramsey/uuid": "^4.1",
-      "ext-mysqli": "*"
+      "ext-mysqli": "*",
+      "ext-memcache": "*",
+      "ext-memcached": "*"
     }
 }

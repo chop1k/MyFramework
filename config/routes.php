@@ -34,4 +34,11 @@
  * For example, /path/to/:tag_name step is 3, /path/:name is 2 respectively.
  */
 return [
+    'test_route' => [
+        'path' => '/test',
+        'controller' => 'test_controller',
+        'methods' => [
+            'GET'
+        ]
+    ]
 ];

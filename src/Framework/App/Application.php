@@ -4,6 +4,7 @@
 namespace Framework\App;
 
 use Exception;
+use Framework\Cache\Cache;
 use Framework\Controller\Controller;
 use Framework\Data\HandlerKit;
 use Framework\Exceptions\InvalidResponseException;
@@ -239,6 +240,7 @@ class Application
         $instance->response = $this->getResponse();
         $instance->manager = $this->handlerKit->manager;
         $instance->query = $this->handlerKit->query;
+        $instance->memcache = $this->handlerKit->memcache;
 
         /**
          * Gets method for execute
@@ -291,6 +293,21 @@ class Application
         $kit->config = Config::fromArray(require_once $config->getFrameworkPath());
         $kit->query = QueryProvider::fromConfig(require_once $config->getQueriesPath());
         $kit->manager = ModelsManager::create(require_once $config->getDatabasesPath());
+
+        /**
+         * Requires cache config
+         */
+        $memcache = require_once $config->getCachePath();
+
+        /**
+         * If cache is not null then wrap and create instance
+         */
+        if (!is_null($memcache))
+        {
+            $memcache = Cache::fromArray($memcache)->getMemcached();
+        }
+
+        $kit->memcache = $memcache;
 
         $app->setHandlerKit($kit);
 
@@ -380,6 +397,7 @@ class Application
                 $instance->config = $app->getHandlerKit()->config;
                 $instance->manager = $app->getHandlerKit()->manager;
                 $instance->query = $app->getHandlerKit()->query;
+                $instance->memcache = $app->getHandlerKit()->memcache;
 
                 /**
                  * Gets method for execute

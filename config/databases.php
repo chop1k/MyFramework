@@ -19,7 +19,5 @@
  * Every database is use lazy loading i.e it will connect only if needed.
  */
 
-use Framework\Model\DatabaseProvider;
-
 return [
 ];

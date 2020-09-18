@@ -9,6 +9,7 @@ use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Model\ModelsManager;
 use Framework\Model\QueryProvider;
+use Memcached;
 
 /**
  * Class HandlerKit represents kit of data to handling in special classes.
@@ -41,8 +42,14 @@ class HandlerKit
     public ModelsManager $manager;
 
     /**
-     * 
+     * Provides queries from config.
      * @var QueryProvider $queryProvider
      */
     public QueryProvider $query;
+
+    /**
+     * Contains Memcached instance or null.
+     * @var Memcached|null $memcache
+     */
+    public ?Memcached $memcache;
 }

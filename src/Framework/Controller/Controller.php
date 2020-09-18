@@ -189,6 +189,7 @@ class Controller
         $instance->config = $handlerKit->config;
         $instance->query = $handlerKit->query;
         $instance->manager = $handlerKit->manager;
+        $instance->memcache = $handlerKit->memcache;
 
         return $instance;
     }

@@ -32,4 +32,8 @@ use App\Controllers\TestController;
  * Middleware is array, so it will be executed synchronously.
  */
 return [
+    'test_controller' => [
+        'class' => TestController::class,
+        'method' => 'index'
+    ]
 ];

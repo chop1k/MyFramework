@@ -30,6 +30,7 @@ $config->setMiddlewarePath(dirname(__DIR__).'/config/middleware.php');
 $config->setQueriesPath(dirname(__DIR__).'/config/queries.php');
 $config->setDatabasesPath(dirname(__DIR__).'/config/databases.php');
 $config->setModelsPath(dirname(__DIR__).'/config/models.php');
+$config->setCachePath(dirname(__DIR__).'/config/cache.php');
 
 try {
     /**
