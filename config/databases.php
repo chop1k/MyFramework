@@ -22,12 +22,4 @@
 use Framework\Model\DatabaseProvider;
 
 return [
-    'db' => [
-        'provider' => DatabaseProvider::MySQL,
-        'host' => 'localhost',
-        'user' => 'admin',
-        'password' => '228',
-        'port' => 3306,
-        'name' => 'test'
-    ]
 ];

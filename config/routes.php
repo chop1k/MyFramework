@@ -34,18 +34,4 @@
  * For example, /path/to/:tag_name step is 3, /path/:name is 2 respectively.
  */
 return [
-    'route_name' => [
-        'path' => '/test/path/:name',
-        'controller' => 'test_controller',
-        'methods' => [
-            'GET', 'POST'
-        ],
-        'tags' => [
-            'name' => [
-                'type' => 'integer',
-                'nullable' => true,
-                'step' => 3
-            ]
-        ]
-    ]
 ];

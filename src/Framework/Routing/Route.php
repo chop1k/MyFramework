@@ -181,6 +181,11 @@ class Route
         }
     }
 
+    public function __construct()
+    {
+        $this->tags = [];
+    }
+
     /**
      * Shortcut to creating route from config.
      * @param string $name
@@ -196,14 +201,17 @@ class Route
         $route->setController($array['controller']);
         $route->setMethods($array['methods']);
 
-        $tags = [];
-
-        foreach ($array['tags'] as $key => $value)
+        if (isset($array['tags']))
         {
-            $tags[] = Tag::fromArray($key, $value);
-        }
+            $tags = [];
 
-        $route->setTags($tags);
+            foreach ($array['tags'] as $key => $value)
+            {
+                $tags[] = Tag::fromArray($key, $value);
+            }
+
+            $route->setTags($tags);
+        }
 
         return $route;
     }

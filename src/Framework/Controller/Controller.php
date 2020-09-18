@@ -164,6 +164,7 @@ class Controller
     {
         $this->beforeMiddleware = [];
         $this->afterMiddleware = [];
+        $this->setExceptions(false);
     }
 
     /**
@@ -206,17 +207,20 @@ class Controller
         $controller->setClass($array['class']);
         $controller->setMethod($array['method']);
 
-        foreach ($array['middleware']['before'] as $name)
+        if (isset($array['middleware']))
         {
-            $controller->addBeforeMiddleware($name);
-        }
+            foreach ($array['middleware']['before'] as $name)
+            {
+                $controller->addBeforeMiddleware($name);
+            }
 
-        foreach ($array['middleware']['after'] as $name)
-        {
-            $controller->addAfterMiddleware($name);
-        }
+            foreach ($array['middleware']['after'] as $name)
+            {
+                $controller->addAfterMiddleware($name);
+            }
 
-        $controller->setExceptions($array['middleware']['exceptions']);
+            $controller->setExceptions($array['middleware']['exceptions']);
+        }
 
         return $controller;
     }
